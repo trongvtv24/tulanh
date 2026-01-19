@@ -8,6 +8,7 @@ import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function SidebarRight() {
     const { level, xp, badges, xpToNextLevel } = useGamification();
