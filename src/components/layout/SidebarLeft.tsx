@@ -51,6 +51,34 @@ export function SidebarLeft() {
                 </Button>
             </div>
 
+            <div className="pt-4">
+                <h3 className="mb-2 px-4 text-xs font-semibold tracking-tight text-muted-foreground">
+                    Community
+                </h3>
+                <div className="space-y-1">
+                    <Button
+                        variant={isActive("/community/youtube") ? "secondary" : "ghost"}
+                        className="w-full justify-start font-medium"
+                        asChild
+                    >
+                        <Link href="/community/youtube">
+                            <span className="mr-2 text-lg">📺</span>
+                            Youtube
+                        </Link>
+                    </Button>
+                    <Button
+                        variant={isActive("/community/tricks-courses") ? "secondary" : "ghost"}
+                        className="w-full justify-start font-medium"
+                        asChild
+                    >
+                        <Link href="/community/tricks-courses">
+                            <span className="mr-2 text-lg">🎓</span>
+                            Tricks & Courses
+                        </Link>
+                    </Button>
+                </div>
+            </div>
+
         </div>
     )
 }

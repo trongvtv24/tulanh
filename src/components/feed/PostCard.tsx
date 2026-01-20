@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useGamification } from "@/context/GamificationContext";
 
 interface PostCardProps {
     post: UI_Post;
@@ -43,6 +44,12 @@ export function PostCard({ post, onToggleLike }: PostCardProps) {
 
     const supabase = createClient();
     const isAdmin = user?.email === 'vutrongvtv24@gmail.com';
+    const { level } = useGamification();
+
+    const minLevel = post.min_level_to_view || 0;
+    const isAuthor = user?.id === post.user.id;
+    // content is locked if minLevel > level AND user is not author AND user is not admin
+    const isLocked = minLevel > level && !isAuthor && !isAdmin;
 
     useEffect(() => {
         // Only fetch approval stats if post is pending
@@ -310,18 +317,43 @@ export function PostCard({ post, onToggleLike }: PostCardProps) {
                 </Button>
             </CardHeader>
             <CardContent className="p-4 pt-2">
-                <p className="whitespace-pre-wrap text-sm leading-relaxed mb-3">
-                    {post.content}
-                </p>
-                {post.image_url && (
-                    <div className="relative w-full rounded-md overflow-hidden bg-muted/20">
-                        <img
-                            src={post.image_url}
-                            alt="Post Image"
-                            loading="lazy"
-                            className="w-full h-auto max-h-[500px] object-cover"
-                        />
+                {post.title && (
+                    <h3 className="font-bold text-lg mb-2 leading-tight">{post.title}</h3>
+                )}
+
+                {isLocked ? (
+                    <div className="relative rounded-md border border-dashed border-red-500/30 bg-red-500/5 p-6 text-center space-y-3">
+                        <div className="mx-auto w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center">
+                            <Lock className="h-5 w-5 text-red-500" />
+                        </div>
+                        <div className="space-y-1">
+                            <h4 className="font-semibold text-red-600">Level {minLevel} Required</h4>
+                            <p className="text-sm text-muted-foreground">
+                                You need to reach level {minLevel} to view this content.
+                                Keep contributing to the community to level up!
+                            </p>
+                        </div>
+                        {/* Show a teaser or blurred content if specific requirement? 
+                             The requirement says "show locked", so this card is good. 
+                             We can optionally show blurred text behind.
+                          */}
                     </div>
+                ) : (
+                    <>
+                        <p className="whitespace-pre-wrap text-sm leading-relaxed mb-3">
+                            {post.content}
+                        </p>
+                        {post.image_url && (
+                            <div className="relative w-full rounded-md overflow-hidden bg-muted/20">
+                                <img
+                                    src={post.image_url}
+                                    alt="Post Image"
+                                    loading="lazy"
+                                    className="w-full h-auto max-h-[500px] object-cover"
+                                />
+                            </div>
+                        )}
+                    </>
                 )}
             </CardContent>
             <CardFooter className="flex-col p-0">

@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { CreatePost } from "./CreatePost";
 import { useInView } from "react-intersection-observer";
+import { useGamification } from "@/context/GamificationContext";
 
 interface FeedProps {
     communityId?: string;
@@ -17,6 +18,7 @@ interface FeedProps {
 export function Feed({ communityId }: FeedProps) {
     const { posts, loading, hasMore, loadMore, createPost, toggleLike } = usePosts(communityId);
     const { user } = useSupabaseAuth();
+    const { level } = useGamification();
 
     // Infinite Scroll Ref
     // When this element comes into view, we trigger loadMore
@@ -28,9 +30,9 @@ export function Feed({ communityId }: FeedProps) {
         }
     }, [inView, hasMore, loadMore]);
 
-    const handlePost = async (content: string, image?: File) => {
+    const handlePost = async (content: string, image?: File, title?: string, minLevel?: number) => {
         try {
-            await createPost(content, image);
+            await createPost(content, image, title, minLevel);
             toast.success("Post created! 📝");
         } catch (error) {
             console.error("Failed to post:", error);
@@ -86,6 +88,7 @@ export function Feed({ communityId }: FeedProps) {
                             avatar: user.user_metadata.avatar_url,
                             handle: user.email?.split('@')[0]
                         }}
+                        maxLevel={level}
                     />
                 </div>
             ) : (

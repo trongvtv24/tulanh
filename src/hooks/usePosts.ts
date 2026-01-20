@@ -24,6 +24,8 @@ export type UI_Post = {
     liked_by_user: boolean;
     image_url?: string;
     status?: 'approved' | 'pending' | 'rejected';
+    title?: string;
+    min_level_to_view?: number;
 };
 
 const PAGE_SIZE = 5; // Load 5 posts at a time
@@ -93,7 +95,10 @@ export function usePosts(communitySlug?: string) {
                 .from("posts")
                 .select(`
                     *,
+                    *,
                     image_url,
+                    title,
+                    min_level_to_view,
                     profiles (
                         full_name,
                         avatar_url,
@@ -158,6 +163,8 @@ export function usePosts(communitySlug?: string) {
                 created_at: string;
                 image_url?: string;
                 status?: 'approved' | 'pending' | 'rejected';
+                title?: string | null;
+                min_level_to_view?: number;
                 profiles: {
                     full_name: string;
                     avatar_url: string;
@@ -181,7 +188,9 @@ export function usePosts(communitySlug?: string) {
                 time: new Date(post.created_at).toLocaleDateString(),
                 liked_by_user: likedPostIds.has(post.id),
                 image_url: post.image_url,
-                status: post.status
+                status: post.status,
+                title: post.title || undefined,
+                min_level_to_view: post.min_level_to_view || 0
             }));
 
             if (isLoadMore) {
@@ -243,7 +252,7 @@ export function usePosts(communitySlug?: string) {
     }, [supabase, communityId]);
 
 
-    const createPost = async (content: string, imageFile?: File) => {
+    const createPost = async (content: string, imageFile?: File, title?: string, minLevel?: number) => {
         if (!user) return;
 
         let imageUrl: string | undefined;
@@ -263,7 +272,9 @@ export function usePosts(communitySlug?: string) {
             user_id: user.id,
             content: content,
             image_url: imageUrl,
-            community_id: communityId || null
+            community_id: communityId || null,
+            title: title || null,
+            min_level_to_view: minLevel || 0,
         }).select().single();
 
         if (error) throw error;
