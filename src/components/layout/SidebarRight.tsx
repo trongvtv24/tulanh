@@ -9,6 +9,8 @@ import { useLeaderboard } from "@/hooks/useLeaderboard";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RankBadge, RankBadgeInline } from "@/components/gamification/RankBadge";
+import { getRankByLevel } from "@/config/ranks";
 
 export function SidebarRight() {
     const { level, xp, badges, xpToNextLevel } = useGamification();
@@ -34,22 +36,22 @@ export function SidebarRight() {
                 </CardHeader>
                 <CardContent className="px-0 sm:px-6">
                     <div className="flex items-center gap-4 mb-4">
-                        <Avatar className="h-12 w-12 rounded-full border-2 border-primary/10">
-                            <AvatarImage src={user.avatar} />
-                            <AvatarFallback>{user.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <div>
+                        {/* Rank Badge thay cho Avatar */}
+                        <div className="relative">
+                            <RankBadge level={level} size="lg" showTooltip={true} />
+                        </div>
+                        <div className="flex-1">
                             <div className="font-bold text-base flex items-center gap-2">
                                 {user.name}
-                                {/* Badges next to name */}
+                                {/* Achievement Badges */}
                                 <div className="flex gap-1">
                                     {badges.filter(b => b.unlocked).slice(0, 3).map((b, i) => (
                                         <span key={i} className="text-sm" title={b.name}>{b.icon}</span>
                                     ))}
                                 </div>
                             </div>
-                            <div className="text-xs font-medium text-muted-foreground bg-secondary px-2 py-0.5 rounded-full inline-block mt-1">
-                                {user.title} • Level {level}
+                            <div className={`text-xs font-medium px-2 py-0.5 rounded-full inline-block mt-1 ${getRankByLevel(level).color} bg-secondary`}>
+                                {getRankByLevel(level).nameVi} • Lv.{level}
                             </div>
                         </div>
                     </div>
@@ -72,7 +74,7 @@ export function SidebarRight() {
                             </div>
                         </div>
                         <p className="text-[10px] text-muted-foreground text-center">
-                            {xpToNextLevel - xp} XP to Level {level + 1}
+                            {level < 5 ? `${xpToNextLevel - xp} XP đến Level ${level + 1}` : '🏆 Đã đạt cấp cao nhất!'}
                         </p>
                     </div>
 
@@ -109,14 +111,17 @@ export function SidebarRight() {
                                     {i + 1}
                                 </div>
 
-                                <Link href={`/profile/${leader.id}`} className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer">
-                                    <Avatar className="h-8 w-8 shrink-0">
-                                        <AvatarImage src={leader.avatar_url} />
-                                        <AvatarFallback>{leader.full_name?.[0] || "U"}</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex-1 truncate font-medium hover:underline decoration-primary">
-                                        {leader.full_name}
+                                <Link href={`/profile/${leader.id}`} className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer">
+                                    {/* Rank Badge nhỏ */}
+                                    <RankBadge level={leader.level} size="sm" showTooltip={false} showGlow={false} />
+                                    <div className="flex-1 truncate">
+                                        <span className="font-medium hover:underline decoration-primary">
+                                            {leader.full_name}
+                                        </span>
                                         {leader.id === authUser?.id && <span className="ml-1 text-[10px] text-primary">(You)</span>}
+                                        <div className={`text-[10px] ${getRankByLevel(leader.level).color}`}>
+                                            {getRankByLevel(leader.level).nameVi}
+                                        </div>
                                     </div>
                                 </Link>
 

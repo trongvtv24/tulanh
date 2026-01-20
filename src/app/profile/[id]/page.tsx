@@ -16,6 +16,8 @@ import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import { ChangeNameDialog } from "@/components/profile/ChangeNameDialog";
 import { ChangeAvatarDialog } from "@/components/profile/ChangeAvatarDialog";
 import { FollowButton } from "@/components/profile/FollowButton";
+import { RankBadge } from "@/components/gamification/RankBadge";
+import { getRankByLevel } from "@/config/ranks";
 
 interface ProfileBadge {
     id: string;
@@ -101,21 +103,26 @@ export default function ProfilePage() {
             <Card className="mb-8">
                 <CardContent className="pt-6">
                     <div className="flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
+                        {/* Rank Badge lớn thay Avatar */}
                         <div className="relative">
-                            <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                                <AvatarImage src={profile.avatar_url} />
-                                <AvatarFallback className="text-2xl">{profile.full_name?.[0]}</AvatarFallback>
-                            </Avatar>
-                            {/* Avatar change button - only for own profile */}
-                            {authUser?.id === profile.id && (
-                                <ChangeAvatarDialog
-                                    userId={profile.id}
-                                    currentAvatar={profile.avatar_url}
-                                    currentName={profile.full_name}
-                                    canChange={userCanChangeAvatar}
-                                    onAvatarChanged={(newUrl) => setProfile({ ...profile, avatar_url: newUrl })}
-                                />
-                            )}
+                            <RankBadge level={profile.level} size="xl" showTooltip={true} showName={true} />
+                            {/* Avatar nhỏ overlay */}
+                            <div className="absolute -bottom-1 -right-1">
+                                <Avatar className="h-10 w-10 border-2 border-background shadow-lg">
+                                    <AvatarImage src={profile.avatar_url} />
+                                    <AvatarFallback className="text-sm">{profile.full_name?.[0]}</AvatarFallback>
+                                </Avatar>
+                                {/* Avatar change button - only for own profile */}
+                                {authUser?.id === profile.id && (
+                                    <ChangeAvatarDialog
+                                        userId={profile.id}
+                                        currentAvatar={profile.avatar_url}
+                                        currentName={profile.full_name}
+                                        canChange={userCanChangeAvatar}
+                                        onAvatarChanged={(newUrl) => setProfile({ ...profile, avatar_url: newUrl })}
+                                    />
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex-1 space-y-2">
@@ -144,7 +151,9 @@ export default function ProfilePage() {
                             </div>
 
                             <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                                <Badge variant="secondary" className="px-3 py-1">Level {profile.level}</Badge>
+                                <Badge variant="secondary" className={`px-3 py-1 ${getRankByLevel(profile.level).color}`}>
+                                    {getRankByLevel(profile.level).nameVi} • Lv.{profile.level}
+                                </Badge>
                                 <Badge variant="outline" className="px-3 py-1">{profile.xp} XP</Badge>
                                 <Badge variant="outline" className="px-3 py-1">{profile.role}</Badge>
                                 <Badge variant="outline" className="px-3 py-1 gap-1">
