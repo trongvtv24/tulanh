@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Lock, Home, Hash, MessageCircle, BookOpen } from "lucide-react";
+import { Lock, Home, Hash, MessageCircle, BookOpen, CheckSquare, NotebookPen } from "lucide-react";
 import { RPG_CLASSES, SPACES } from "@/data/mock";
 import Link from "next/link";
 import { useGamification } from "@/context/GamificationContext";
@@ -22,8 +22,18 @@ export function SidebarLeft() {
                     asChild
                 >
                     <Link href="/">
-                        <Home className="mr-2 h-4 w-4" />
-                        Home Feed
+                        <NotebookPen className="mr-2 h-4 w-4" />
+                        My Journal
+                    </Link>
+                </Button>
+                <Button
+                    variant={isActive("/todos") ? "secondary" : "ghost"}
+                    className="w-full justify-start font-medium"
+                    asChild
+                >
+                    <Link href="/todos">
+                        <CheckSquare className="mr-2 h-4 w-4" />
+                        Todo List
                     </Link>
                 </Button>
                 <Button

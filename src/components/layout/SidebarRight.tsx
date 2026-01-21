@@ -41,14 +41,8 @@ export function SidebarRight() {
                             <RankBadge level={level} size="lg" showTooltip={true} />
                         </div>
                         <div className="flex-1">
-                            <div className="font-bold text-base flex items-center gap-2">
+                            <div className="font-bold text-base">
                                 {user.name}
-                                {/* Achievement Badges */}
-                                <div className="flex gap-1">
-                                    {badges.filter(b => b.unlocked).slice(0, 3).map((b, i) => (
-                                        <span key={i} className="text-sm" title={b.name}>{b.icon}</span>
-                                    ))}
-                                </div>
                             </div>
                             <div className={`text-xs font-medium px-2 py-0.5 rounded-full inline-block mt-1 ${getRankByLevel(level).color} bg-secondary`}>
                                 {getRankByLevel(level).nameVi} • Lv.{level}
@@ -56,7 +50,7 @@ export function SidebarRight() {
                         </div>
                     </div>
 
-                    <div className="space-y-1.5 mb-6">
+                    <div className="space-y-1.5">
                         <div className="flex justify-between text-xs font-medium">
                             <span className="flex items-center gap-1">
                                 <span className="text-primary">⚡</span> XP Progress
@@ -76,20 +70,6 @@ export function SidebarRight() {
                         <p className="text-[10px] text-muted-foreground text-center">
                             {level < 5 ? `${xpToNextLevel - xp} XP đến Level ${level + 1}` : '🏆 Đã đạt cấp cao nhất!'}
                         </p>
-                    </div>
-
-                    <div className="grid grid-cols-5 gap-2">
-                        {badges.map((b, i) => (
-                            <div key={i} className={`aspect-square rounded-md bg-secondary flex items-center justify-center text-lg ${b.unlocked ? '' : 'opacity-30 grayscale'}`} title={b.name}>
-                                {b.icon}
-                            </div>
-                        ))}
-                        {/* Badge Placeholders */}
-                        {[...Array(5 - badges.length)].map((_, i) => (
-                            <div key={`p-${i}`} className="aspect-square rounded-md bg-secondary/50 flex items-center justify-center text-xs opacity-20">
-                                🔒
-                            </div>
-                        ))}
                     </div>
                 </CardContent>
             </Card>
