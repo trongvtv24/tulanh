@@ -187,28 +187,14 @@ export default function ProfilePage() {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Left Column: Stats & Badges */}
+                {/* Left Column: Stats */}
                 <div className="space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base flex items-center gap-2">
-                                <Trophy className="h-4 w-4 text-yellow-500" />
-                                Badges ({profile.badges.length})
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-4 gap-2">
-                                {profile.badges.map((badge: ProfileBadge) => (
-                                    <div key={badge.id} className="aspect-square bg-secondary/50 rounded-lg flex items-center justify-center text-2xl" title={badge.name}>
-                                        {badge.icon}
-                                    </div>
-                                ))}
-                                {profile.badges.length === 0 && (
-                                    <div className="col-span-4 text-sm text-muted-foreground text-center py-4">
-                                        No badges yet
-                                    </div>
-                                )}
-                            </div>
+                    {/* Level Benefits Notice */}
+                    <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                        <CardContent className="pt-6">
+                            <p className="text-sm text-center">
+                                <span className="font-semibold text-primary">💡 Mẹo:</span> Tăng Level để mở khóa thêm nhiều bài viết hay, tricks và khóa học độc quyền!
+                            </p>
                         </CardContent>
                     </Card>
 
