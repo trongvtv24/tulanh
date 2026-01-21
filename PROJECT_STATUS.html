@@ -217,12 +217,12 @@ erDiagram
 | **Todo List** | ✅ Hoàn thành | Basic CRUD |
 | **Nhật Ký (Journal)** | ✅ Hoàn thành | UI/UX Basic |
 | **Gamification** | ✅ Hoàn thành | XP/Level Logic |
-| **Messaging System** | ⚠️ Pending DB | Cần chạy migration `chat_system_init.sql` |
+| **Messaging System** | ⚠️ Pending DB Fix | Chạy `fix_chat_recursion.sql` để sửa lỗi đệ quy |
 | **Courses UI** | 🚧 Placeholder | Đang phát triển nội dung |
 
 ---
 
-> **QUAN TRỌNG:** Để tính năng nhắn tin hoạt động, bạn cần vào Supabase SQL Editor và chạy nội dung file `supabase/migrations/chat_system_init.sql`.
+> **FIX LỖI CHAT:** Bạn cần chạy nội dung file `supabase/migrations/fix_chat_recursion.sql` trên Supabase SQL Editor để khắc phục lỗi "Infinite Recursion".
 
 ---
 
@@ -230,6 +230,8 @@ erDiagram
 
 | Date | Content | Author |
 | :--- | :--- | :--- |
+| **21/01/2026** | Fix Chat System Recursion Bug, update migration | Antigravity |
+| **21/01/2026** | Add Chat System migration and fix useChat hook | Antigravity |
 | **21/01/2026** | Redesign Landing Page: layout compact, loại bỏ Hero lớn, các section gần nhau hơn | Antigravity |
 | **21/01/2026** | Loại bỏ Dashboard Preview placeholder từ Landing Page (UI đơn giản, tập trung hơn) | Antigravity |
 | **21/01/2026** | Fix duplicate LandingPage code, update npm packages | Antigravity |

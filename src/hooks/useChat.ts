@@ -162,17 +162,36 @@ export function useChat() {
     const sendMessage = async (content: string) => {
         if (!user || !activeConversationId || !content.trim()) return;
 
-        const { error } = await supabase.from('direct_messages').insert({
+        // 1. Optimistic Update (Show message immediately)
+        const optimisticMessage: Message = {
+            id: `temp-${Date.now()}`, // Temporary ID
+            conversation_id: activeConversationId,
+            sender_id: user.id,
+            content: content,
+            created_at: new Date().toISOString(),
+            is_read: false
+        };
+
+        setMessages(prev => [...prev, optimisticMessage]);
+
+        // 2. Send to Server
+        const { data, error } = await supabase.from('direct_messages').insert({
             conversation_id: activeConversationId,
             sender_id: user.id,
             content: content
-        });
+        }).select().single();
 
         if (error) {
-            console.error("Send message error:", error.message, error.details, error.hint);
-            // Show user-friendly error
-            alert(`Failed to send message: ${error.message || 'Unknown error'}. Please check if the chat tables exist in Supabase.`);
+            console.error("Send message error:", error.message);
+            // Revert optimistic update on error
+            setMessages(prev => prev.filter(m => m.id !== optimisticMessage.id));
+            alert(`Failed to send: ${error.message}`);
             return;
+        }
+
+        // 3. Replace temp message with real one (if realtime doesn't catch it first)
+        if (data) {
+            setMessages(prev => prev.map(m => m.id === optimisticMessage.id ? (data as Message) : m));
         }
 
         // Update Conversation timestamp
