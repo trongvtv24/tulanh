@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { useGamification } from "@/context/GamificationContext";
 import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import { isAdminUser } from "@/config/constants";
+import { updatePostAction } from "@/app/actions/post";
 
 interface PostCardProps {
     post: UI_Post;
@@ -104,20 +105,18 @@ export function PostCard({ post, onToggleLike, onDeletePost, onBlockUser }: Post
     const handleUpdatePost = async () => {
         if (!editContent.trim()) return;
         setIsSaving(true);
-        const { error } = await supabase
-            .from('posts')
-            .update({ content: editContent })
-            .eq('id', post.id);
 
-        if (!error) {
+        try {
+            await updatePostAction(post.id, editContent);
             toast.success("Đã cập nhật bài viết!");
             setDisplayContent(editContent);
             setIsEditing(false);
-        } else {
+        } catch (error) {
             console.error(error);
             toast.error("Lỗi cập nhật bài viết");
+        } finally {
+            setIsSaving(false);
         }
-        setIsSaving(false);
     };
 
     const handleAdminAction = async (action: 'approve' | 'reject') => {

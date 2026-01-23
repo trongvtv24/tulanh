@@ -6,6 +6,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import { PostCard } from "./PostCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PostSkeleton } from "./PostSkeleton";
 import { toast } from "sonner";
 import { CreatePost } from "./CreatePost";
 import { useInView } from "react-intersection-observer";
@@ -57,20 +58,7 @@ export function Feed({ communityId }: FeedProps) {
                     </div>
                 </Card>
                 {[1, 2, 3].map((i) => (
-                    <Card key={i} className="p-6">
-                        <div className="flex gap-4 mb-4">
-                            <Skeleton className="h-10 w-10 rounded-full" />
-                            <div className="space-y-2">
-                                <Skeleton className="h-4 w-[150px]" />
-                                <Skeleton className="h-3 w-[100px]" />
-                            </div>
-                        </div>
-                        <Skeleton className="h-24 w-full mb-4" />
-                        <div className="flex gap-4">
-                            <Skeleton className="h-8 w-16" />
-                            <Skeleton className="h-8 w-16" />
-                        </div>
-                    </Card>
+                    <PostSkeleton key={i} />
                 ))}
             </div>
         );
