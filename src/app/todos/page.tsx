@@ -9,6 +9,7 @@ import { Plus, Trash2, CheckCircle2, Circle, CalendarDays } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import { toast } from "sonner";
+import { TodosSidebar } from "@/components/layout/TodosSidebar";
 
 interface Todo {
     id: string;
@@ -231,6 +232,12 @@ export default function TodosPage() {
                     )}
                 </CardContent>
             </Card>
+
+            {/* Mobile/Tablet Sidebar Content (Calendar & Pomodoro) - Hidden on XL screens where real sidebar exists */}
+            <div className="xl:hidden pt-4 border-t">
+                <h2 className="text-lg font-bold mb-4">Công cụ hỗ trợ</h2>
+                <TodosSidebar />
+            </div>
         </div>
     );
 }
