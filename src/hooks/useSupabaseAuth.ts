@@ -36,6 +36,7 @@ export function useSupabaseAuth() {
             provider: 'google',
             options: {
                 redirectTo: `${baseUrl}/auth/callback`,
+                scopes: 'email profile openid',
             },
         });
     };
