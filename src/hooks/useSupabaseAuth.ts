@@ -31,10 +31,11 @@ export function useSupabaseAuth() {
     }, [supabase]);
 
     const signInWithGoogle = async () => {
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
         await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
+                redirectTo: `${baseUrl}/auth/callback`,
                 scopes: 'https://www.googleapis.com/auth/calendar'
             },
         });
