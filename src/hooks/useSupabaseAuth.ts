@@ -36,7 +36,6 @@ export function useSupabaseAuth() {
             provider: 'google',
             options: {
                 redirectTo: `${baseUrl}/auth/callback`,
-                scopes: 'https://www.googleapis.com/auth/calendar'
             },
         });
     };
