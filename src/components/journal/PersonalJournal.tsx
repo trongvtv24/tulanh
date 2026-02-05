@@ -64,7 +64,11 @@ export function PersonalJournal() {
             } else {
                 setEntries(prev => [...prev, ...data]);
             }
+            // Nếu data rỗng hoặc ít hơn PAGE_SIZE thì không còn data để load
             setHasMore(data.length === PAGE_SIZE);
+        } else {
+            // Không có data hoặc lỗi -> không còn gì để load
+            setHasMore(false);
         }
         setLoading(false);
     }, [user, supabase]);
@@ -327,8 +331,8 @@ export function PersonalJournal() {
                 ))
             )}
 
-            {/* Load More */}
-            {hasMore && (
+            {/* Load More - Chỉ hiện khi có entries và còn data để load */}
+            {hasMore && entries.length > 0 && (
                 <div ref={ref} className="flex justify-center p-4">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>

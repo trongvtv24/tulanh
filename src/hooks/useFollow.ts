@@ -28,16 +28,33 @@ export function useFollow(targetUserId: string): UseFollowReturn {
                 return;
             }
 
-            // Check follow status
-            const { data: followData } = await supabase
-                .from('follows')
-                .select('id')
-                .eq('follower_id', user.id)
-                .eq('following_id', targetUserId)
-                .single();
+            // Timeout to prevent infinite loading
+            const timeoutId = setTimeout(() => {
+                setLoading(false);
+                console.warn('Follow status check timeout after 8s');
+            }, 8000);
 
-            setIsFollowing(!!followData);
-            setLoading(false);
+            try {
+                // Check follow status
+                const { data: followData, error } = await supabase
+                    .from('follows')
+                    .select('id')
+                    .eq('follower_id', user.id)
+                    .eq('following_id', targetUserId)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    // PGRST116 = not found, which is expected if not following
+                    console.error('Follow check error:', error);
+                }
+
+                setIsFollowing(!!followData);
+            } catch (error) {
+                console.error('Failed to check follow status:', error);
+            } finally {
+                clearTimeout(timeoutId);
+                setLoading(false);
+            }
         };
 
         checkFollowStatus();

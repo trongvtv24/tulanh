@@ -139,6 +139,7 @@ export function usePosts(communitySlug?: string, topic?: string) {
                     setHasMore(false);
                 } else {
                     setPosts([]);
+                    setHasMore(false); // Không có posts -> không cần load more
                 }
                 return;
             }
@@ -229,10 +230,17 @@ export function usePosts(communitySlug?: string, topic?: string) {
         }
     }, [supabase, user, communityId, topic]);
 
-    const loadMore = useCallback(() => {
+    const loadMore = useCallback(async () => {
         if (!hasMore || loading) return;
-        pageRef.current += 1;
-        fetchPosts(true);
+
+        try {
+            pageRef.current += 1;
+            await fetchPosts(true);
+        } catch (error) {
+            console.error("Load more error:", error);
+            setHasMore(false); // Stop infinite scroll on error
+            setLoading(false);
+        }
     }, [hasMore, loading, fetchPosts]);
 
     // Initial Fetch

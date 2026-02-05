@@ -10,24 +10,43 @@ export function useSupabaseAuth() {
     const supabase = createClient();
 
     useEffect(() => {
+        // Timeout to prevent infinite loading
+        const timeoutId = setTimeout(() => {
+            setLoading(false);
+            console.warn('Auth session check timeout after 10s');
+        }, 10000);
+
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             (_event: AuthChangeEvent, session: Session | null) => {
                 setSession(session);
                 setUser(session?.user ?? null);
                 setLoading(false);
+                clearTimeout(timeoutId);
             }
         );
 
-        // Initial check
+        // Initial check with error handling
         const initSession = async () => {
-            const { data } = await supabase.auth.getSession();
-            setSession(data.session);
-            setUser(data.session?.user ?? null);
-            setLoading(false);
+            try {
+                const { data, error } = await supabase.auth.getSession();
+                if (error) {
+                    console.error('Auth session error:', error);
+                }
+                setSession(data.session);
+                setUser(data.session?.user ?? null);
+            } catch (error) {
+                console.error('Failed to get session:', error);
+            } finally {
+                clearTimeout(timeoutId);
+                setLoading(false);
+            }
         };
         initSession();
 
-        return () => subscription.unsubscribe();
+        return () => {
+            subscription.unsubscribe();
+            clearTimeout(timeoutId);
+        };
     }, [supabase]);
 
     const signInWithGoogle = async () => {

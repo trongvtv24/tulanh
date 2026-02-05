@@ -119,8 +119,8 @@ export function Feed({ communityId }: FeedProps) {
                 />
             ))}
 
-            {/* Loading Indicator for Infinite Scroll */}
-            {hasMore && (
+            {/* Loading Indicator for Infinite Scroll - Chỉ hiện khi có posts */}
+            {hasMore && posts.length > 0 && (
                 <div ref={ref} className="flex justify-center p-4">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
