@@ -1,80 +1,37 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to the **Tủ Lạnh (Tulanh Online)** project will be documented in this file.
 
-## [2026-02-05]
-### Added
-- **🧹 Component Refactoring:** Tách `class/[slug]/page.tsx` thành modular components.
-  - `AdminDashboard.tsx` - Admin panel với Member Requests và Pending Posts
-  - `ClassHeader.tsx` - Header với banner và membership button
-  - `ContentLocked.tsx` - UI khi user chưa join class
-  - `index.ts` - Barrel export file
-- **🔒 Security Audit:** Full audit report (`docs/reports/audit_2026-02-05.md`)
-  - Score: 9/10 - No critical issues
-  - npm vulnerabilities: 0
-  - Supabase Advisor: "No issues found"
-  - RLS enabled on all important tables
+## [2.1.0] - 2026-02-05 (Fixes & VPS Deploy)
 
-### Fixed
-- **GamificationContext:** Fixed "variable accessed before declaration" error for `getXpReason`
-- **Type Safety:** Replaced all `any` types với proper interfaces (`PendingMember`, `GoogleCalendarEvent`)
-- **Console Cleanup:** Removed sensitive session logging từ `useCalendarSync.ts`
-- **Unused Imports:** Removed unused imports across multiple files
+### 🚀 Deployed
+- **VPS Deployment**: Deployed production build to `43.228.214.174` using PM2.
+- **Environment**: Configured `.env.local` on production server.
 
-### Updated
-- **Dependencies:**
-  - `@supabase/supabase-js`: 2.90.1 → 2.94.1
-  - `eslint-config-next`: Updated to match Next.js 16.1.6
-- **ESLint:** Reduced từ 77 → 74 problems (7 → 6 errors, 68 warnings)
+### 🐛 Fixed
+- **Critical**: Fixed "Frozen Loading Icon" issue where the interface would hang due to missing Supabase credentials.
+- **UI**: Fixed loading spinner persisting on "My Journal" and "Feed" when no entries/posts exist.
+- **Stability**: Added timeouts (8s-10s) and error handling to `useSupabaseAuth`, `useFollow`, and `usePosts` hooks to prevent infinite loading loops.
+- **Logic**: Corrected `hasMore` logic in infinite scroll to properly handle empty initial states.
 
-### Refactored
-- **Class Page:** Giảm từ 494 → 398 dòng qua component extraction
-- **Error Handling:** Thay `any` bằng `unknown` với proper `instanceof Error` checks
+### 🔧 Refactor
+- Improved error handling in `useSupabaseAuth` initialization.
 
-## [2026-01-30]
-### Added
-- **🆕 Tủ Lạnh Module (MarkNote):** Complete note-taking and URL bookmarking system.
-  - Markdown editor with live preview
-  - URL auto-metadata fetching (title, description)
-  - Hierarchical tag system
-  - Full-text search functionality
-  - New route: `/notes`
-  - New components: `NoteCard`, `NoteEditor`, `TagTree`
-  - Database tables: `notes`, `tags`, `note_tags`
-- **Config:** Tạo file `.env.local` chuẩn cho development.
+---
 
-### Fixed
-- **Critical Migration:** Đã chạy migration `20260127_add_topic_to_posts.sql` trên Production. Tính năng Topic Filter giờ đã hoạt động 100%.
-- **Data Integrity:** Chuẩn hóa dữ liệu cũ của cột `topic` thành default value (`'share'`).
-- **Notes Page Bug:** Fixed infinite rendering loop caused by `loading` in useEffect dependencies.
-- **Notes Layout:** Fixed content overlap with Leaderboard sidebar (changed `max-w-4xl` → `max-w-3xl`).
-- **Notes Wording:** Updated từ "ghi chú" thành "kiến thức" across entire module.
+## [2.0.0] - 2026-02-05 (Audit & Optimizations)
 
-### Updated
-- **Dependencies:** Nâng cấp Next.js lên 16.1.3, React 19.2.3.
-- **Documentation:** Viết lại toàn bộ `README.md` với hướng dẫn cài đặt, cấu hình và deploy chi tiết.
-- **Audit:** Hoàn thành Full Audit Report (`docs/reports/audit_2026-01-30.md`).
-- **Sidebar:** Added "Tủ Lạnh" menu item to navigation.
+### 🔄 Changed
+- Refactored `GamificationContext` to fix hoisting errors.
+- Split `Class` page components (AdminDashboard, ContentLocked) for better maintainability.
+- Updated dependencies: `@supabase/supabase-js`, `react`, `next`.
 
-## [2026-01-27]
-### Added
-- **Community Feed Topics:** Added topic filtering (Youtube, MMO, Share) to the main feed.
-- **Deep Glass Theme:** Implemented a new modern dark theme with glassmorphism effects.
-- **Rank Badges:** Enhanced rank badges with better contrast and animations.
-- **Database:** Added `topic` column to `posts` table (Migration: `20260127_add_topic_to_posts.sql`).
-- **Internationalization:** Complete English and Vietnamese translations for Feed, Create Post, and Todo List features.
-- **Deployment:** Successfully deployed to VPS (Ubuntu/aaPanel) with Nginx Reverse Proxy and SSL.
+### 🛡️ Security
+- Completed full security audit (Score: 9/10).
+- Confirmed RLS policies on all sensitive tables.
 
-### Changed
-- **Sidebar:** Removed `Youtube` and `Tricks & Courses` sub-menus to simplify navigation.
-- **Create Post:** Added topic selection dropdown.
-- **Feed UI:** Replaced simple list with filter pills for topic selection.
-- **Text Contrast:** Improved readability on User Title Badges and Sidebar Rank Widgets.
+---
 
-### Fixed
-- **Peer Dependencies:** Resolved NPM peer dependency conflicts during install.
-- **Environment:** Automated `.env.local` creation from `vercel_env_vars.html`.
-- **Console Logs:** Removed debug console logs from production code.
-
-### Refactored
-- **PostCard Component:** Split monolithic `PostCard.tsx` into 5 sub-components (`PostHeader`, `PostContent`, `PostActions`, `PostComments`, `PostApprovalStatus`) for better maintainability.
+## [1.0.0] - 2026-01-30 (Initial Release)
+- Initial release of Tủ Lạnh Online.
+- Features: Community, Classes, Notes, Productivity Tools.

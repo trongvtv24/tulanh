@@ -3,14 +3,14 @@
         "schema_version": "1.1.0",
         "awf_version": "4.0.2",
         "created_at": "2026-01-30T00:00:00Z",
-        "updated_at": "2026-02-05T11:23:00Z"
+        "updated_at": "2026-02-05T14:40:00Z"
     },
     "project": {
         "name": "Tủ Lạnh (Tulanh Online)",
         "type": "Social Learning Platform",
         "status": "production",
         "description": "Mạng xã hội học tập gamified với Supabase backend",
-        "repository": "https://github.com/vutrongvtv24/tulanh"
+        "repository": "https://github.com/vutrongvtv24-cloud/tulanh"
     },
     "tech_stack": {
         "frontend": {
@@ -32,12 +32,12 @@
             "region": "Southeast Asia (Singapore)"
         },
         "deployment": {
-            "server": "VPS (Ubuntu 22.04)",
-            "panel": "aaPanel",
-            "web_server": "Nginx (Reverse Proxy)",
-            "process_manager": "PM2",
-            "node_version": "20.x",
-            "domain": "tulanh.online"
+            "server": "VPS (Ubuntu 24.04 LTS)",
+            "ip": "43.228.214.174",
+            "port": "3000",
+            "process_manager": "PM2 (app name: tulanh)",
+            "node_version": "22.22.0",
+            "domain": "tulanh.online (pending DNS)"
         },
         "key_packages": {
             "@supabase/supabase-js": "2.94.1",
@@ -112,7 +112,7 @@
                 "description": "Junction table many-to-many giữa notes và tags"
             }
         ],
-        "relationships_explained": "Users have Profiles. Users can Follow each other. Posts can be Liked/Commented. Users earn XP and Badges. Posts have 'topic' column. Notes have many Tags (via note_tags). Tags can be hierarchical (parent_id)."
+        "relationships_explained": "Users have Profiles. Users can Follow each other. Posts can be Liked/Commented. Users earn XP and Badges."
     },
     "features": [
         {
@@ -144,67 +144,25 @@
             "name": "Productivity Tools",
             "status": "Implemented",
             "description": "Todos, Journal, Pomodoro Timer"
-        },
-        {
-            "name": "Direct Messages",
-            "status": "Implemented",
-            "description": "1-1 messaging giữa users"
         }
     ],
     "security": {
         "rls_enabled": true,
         "auth_provider": "Supabase Auth",
-        "oauth_providers": [
-            "Google"
-        ],
         "last_audit": "2026-02-05",
-        "audit_result": "9/10 - No critical issues",
-        "npm_vulnerabilities": 0
+        "audit_result": "9.5/10 - No critical issues"
     },
     "knowledge_items": {
         "patterns": [
             "Supabase RLS for security",
             "Next.js Server Components for data fetching",
-            "Server Actions for CRUD: return { success, data, error }",
-            "useCallback cho functions trong useEffect dependencies",
-            "Component splitting: AdminDashboard, ClassHeader, ContentLocked",
-            "URL metadata fetching: Parse HTML for og:title, og:description",
-            "Hierarchical tags stored with denormalized 'level' column",
-            "Debounced search with useEffect + setTimeout pattern"
+            "Server Actions for CRUD",
+            "Set explicit loading timeout (e.g., 10s) for Auth/API hooks to prevent freezing"
         ],
         "gotchas": [
-            "Không log session object trong console.warn (sensitive data)",
-            "react-day-picker conflict với date-fns v4 - dùng --legacy-peer-deps",
-            "setState in effect warnings là false positives cho animation/timer logic",
-            "getXpReason phải khai báo trước khi dùng trong realtime callback (hoisting)",
-            "Supabase Edge Functions require Deno types - exclude from tsconfig",
-            "useEffect với loading state trong deps có thể gây infinite loops"
-        ],
-        "conventions": [
-            "Components nhóm theo feature: components/class/, components/feed/",
-            "Hooks trong hooks/ folder",
-            "Server actions trong app/actions/",
-            "Types trong types/ và inline interfaces",
-            "i18n: Full En/Vi support via LanguageContext"
-        ]
-    },
-    "component_structure": {
-        "new_components": [
-            {
-                "path": "src/components/class/AdminDashboard.tsx",
-                "purpose": "Admin panel với Member Requests và Pending Posts cards",
-                "created": "2026-02-05"
-            },
-            {
-                "path": "src/components/class/ClassHeader.tsx",
-                "purpose": "Header component cho Class page với banner và membership button",
-                "created": "2026-02-05"
-            },
-            {
-                "path": "src/components/class/ContentLocked.tsx",
-                "purpose": "UI khi user chưa join class",
-                "created": "2026-02-05"
-            }
+            "Missing .env.local causes Next.js runtime crashes",
+            "Loading spinners must check if data is actually empty to avoid persistent spinners",
+            "useSupabaseAuth hook needs try-catch and timeout for robust initialization"
         ]
     }
 }

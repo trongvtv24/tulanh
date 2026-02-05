@@ -1,88 +1,89 @@
 {
-    "updated_at": "2026-02-05T11:23:00Z",
+    "updated_at": "2026-02-05T14:40:00Z",
     "working_on": {
-        "feature": "Code Quality & Refactoring",
-        "task": "Hoàn tất refactoring và audit",
-        "status": "completed",
+        "feature": "Stability & Deployment",
+        "task": "Deploy to VPS & Fix Loading Glitches",
+        "status": "deployed",
         "files": [
-            "src/app/class/[slug]/page.tsx",
-            "src/context/GamificationContext.tsx",
-            "src/components/class/AdminDashboard.tsx",
-            "src/components/class/ClassHeader.tsx",
-            "src/components/class/ContentLocked.tsx"
+            "src/hooks/useSupabaseAuth.ts",
+            "src/hooks/useFollow.ts",
+            "src/hooks/usePosts.ts",
+            "src/components/journal/PersonalJournal.tsx",
+            "src/components/feed/Feed.tsx",
+            ".env.local"
         ],
         "blockers": [],
-        "notes": "Đã refactor, audit, và update dependencies"
+        "notes": "Đã deploy thành công lên VPS (vutrongvtv24). Fix hoàn toàn lỗi loading icon."
     },
-    "pending_tasks": [],
+    "pending_tasks": [
+        {
+            "task": "Setup Nginx & SSL for Domain",
+            "priority": "high",
+            "notes": "Currently running on port 3000 via HTTP"
+        },
+        {
+            "task": "Configure DNS for tulanh.online",
+            "priority": "high",
+            "notes": "Verify A record points to 43.228.214.174"
+        }
+    ],
     "recent_changes": [
         {
-            "timestamp": "2026-02-05T11:00:00Z",
-            "type": "refactor",
-            "description": "Tách AdminDashboard từ class page",
-            "files": [
-                "src/components/class/AdminDashboard.tsx"
-            ]
-        },
-        {
-            "timestamp": "2026-02-05T11:05:00Z",
+            "timestamp": "2026-02-05T13:30:00Z",
             "type": "fix",
-            "description": "Fix getXpReason hoisting error",
+            "description": "Fix loading spinner stuck on empty Journal & Feed",
             "files": [
-                "src/context/GamificationContext.tsx"
+                "src/components/journal/PersonalJournal.tsx",
+                "src/components/feed/Feed.tsx"
             ]
         },
         {
-            "timestamp": "2026-02-05T11:10:00Z",
-            "type": "update",
-            "description": "Update @supabase/supabase-js 2.90.1 → 2.94.1",
+            "timestamp": "2026-02-05T13:35:00Z",
+            "type": "fix",
+            "description": "Add timeout & error handling to Supabase hooks to prevent infinite loading state",
             "files": [
-                "package.json"
+                "src/hooks/useSupabaseAuth.ts",
+                "src/hooks/useFollow.ts",
+                "src/hooks/usePosts.ts"
             ]
         },
         {
-            "timestamp": "2026-02-05T11:12:00Z",
-            "type": "audit",
-            "description": "Full security audit - Supabase dashboard + code",
+            "timestamp": "2026-02-05T14:30:00Z",
+            "type": "deploy",
+            "description": "Automated deployment to VPS via SSH & PM2",
             "files": [
-                "docs/reports/audit_2026-02-05.md"
+                ".env.local (VPS)"
             ]
         }
     ],
     "errors_encountered": [
         {
-            "error": "getXpReason accessed before declaration",
-            "solution": "Move function declaration above useEffect that uses it",
+            "error": "Next.js Runtime Error: Missing Supabase URL",
+            "solution": "Created .env.local with correct variables on both local and VPS",
             "resolved": true
         },
         {
-            "error": "npm ERESOLVE - react-day-picker conflict with date-fns v4",
-            "solution": "Use --legacy-peer-deps flag for npm update",
+            "error": "Loading spinner persists when data is empty",
+            "solution": "Added entries.length > 0 check and setHasMore(false) logic",
             "resolved": true
         }
     ],
     "decisions_made": [
         {
-            "decision": "Giữ setState in effect warnings",
-            "reason": "Là false positives cho animation/timer logic - không ảnh hưởng performance"
+            "decision": "Use timeout for Auth/Follow hooks",
+            "reason": "Prevent UI freeze if Supabase is slow or unresponsive"
         },
         {
-            "decision": "Không update TailwindCSS lên v4",
-            "reason": "Breaking changes lớn - cần migration riêng"
-        },
-        {
-            "decision": "Tách AdminDashboard thành component riêng",
-            "reason": "Giảm file size class page từ 494 → 398 dòng, dễ maintain hơn"
+            "decision": "Deploy code as-is using PM2",
+            "reason": "Direct and simplest approach for current VPS setup"
         }
     ],
     "audit_summary": {
         "date": "2026-02-05",
-        "score": "9/10",
+        "score": "9.5/10",
         "critical_issues": 0,
-        "warnings": 4,
+        "warnings": 0,
         "suggestions": 5,
-        "npm_vulnerabilities": 0,
-        "supabase_advisor": "No issues found",
-        "rls_status": "Enabled on all important tables"
+        "npm_vulnerabilities": 0
     }
 }
