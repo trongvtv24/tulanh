@@ -1,7 +1,6 @@
 "use client";
 
 import { Feed } from "@/components/feed/Feed";
-import { LandingPage } from "@/components/landing/LandingPage";
 import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
