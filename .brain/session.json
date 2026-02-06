@@ -1,19 +1,17 @@
 {
-    "updated_at": "2026-02-05T14:40:00Z",
+    "updated_at": "2026-02-06T05:00:00Z",
     "working_on": {
-        "feature": "Stability & Deployment",
-        "task": "Deploy to VPS & Fix Loading Glitches",
-        "status": "deployed",
+        "feature": "Branding & Localization",
+        "task": "Update logo, favicon, and remove English language",
+        "status": "completed",
         "files": [
-            "src/hooks/useSupabaseAuth.ts",
-            "src/hooks/useFollow.ts",
-            "src/hooks/usePosts.ts",
-            "src/components/journal/PersonalJournal.tsx",
-            "src/components/feed/Feed.tsx",
-            ".env.local"
+            "src/components/layout/Header.tsx",
+            "src/context/LanguageContext.tsx",
+            "src/app/icon.png",
+            "public/images/fridge-logo.png"
         ],
         "blockers": [],
-        "notes": "Đã deploy thành công lên VPS (vutrongvtv24). Fix hoàn toàn lỗi loading icon."
+        "notes": "Đã hoàn thành việc rebrand thành 'The FRIDGE' và loại bỏ hoàn toàn tiếng Anh"
     },
     "pending_tasks": [
         {
@@ -29,55 +27,92 @@
     ],
     "recent_changes": [
         {
-            "timestamp": "2026-02-05T13:30:00Z",
-            "type": "fix",
-            "description": "Fix loading spinner stuck on empty Journal & Feed",
+            "timestamp": "2026-02-06T04:00:00Z",
+            "type": "feature",
+            "description": "Make Community page public - Allow unauthenticated users to view approved posts",
             "files": [
-                "src/components/journal/PersonalJournal.tsx",
-                "src/components/feed/Feed.tsx"
+                "src/app/page.tsx",
+                "supabase/migrations/20260206_make_community_posts_public.sql"
             ]
         },
         {
-            "timestamp": "2026-02-05T13:35:00Z",
-            "type": "fix",
-            "description": "Add timeout & error handling to Supabase hooks to prevent infinite loading state",
+            "timestamp": "2026-02-06T04:15:00Z",
+            "type": "branding",
+            "description": "Update logo to 'The FRIDGE' with fridge icon and orange stroke effect",
             "files": [
-                "src/hooks/useSupabaseAuth.ts",
-                "src/hooks/useFollow.ts",
-                "src/hooks/usePosts.ts"
+                "src/components/layout/Header.tsx",
+                "public/images/fridge-logo.png"
             ]
         },
         {
-            "timestamp": "2026-02-05T14:30:00Z",
-            "type": "deploy",
-            "description": "Automated deployment to VPS via SSH & PM2",
+            "timestamp": "2026-02-06T04:20:00Z",
+            "type": "branding",
+            "description": "Replace favicon with fridge logo",
             "files": [
-                ".env.local (VPS)"
+                "src/app/favicon.ico (deleted)",
+                "src/app/icon.png (created)"
+            ]
+        },
+        {
+            "timestamp": "2026-02-06T04:30:00Z",
+            "type": "feature",
+            "description": "Set Community Feed as homepage for all users (logged in or not)",
+            "files": [
+                "src/app/page.tsx"
+            ]
+        },
+        {
+            "timestamp": "2026-02-06T04:55:00Z",
+            "type": "localization",
+            "description": "Remove English language - Vietnamese only",
+            "files": [
+                "src/context/LanguageContext.tsx",
+                "src/components/layout/Header.tsx"
             ]
         }
     ],
     "errors_encountered": [
         {
-            "error": "Next.js Runtime Error: Missing Supabase URL",
-            "solution": "Created .env.local with correct variables on both local and VPS",
+            "error": "VPS showing old logo after deployment",
+            "solution": "Clear .next cache folder before rebuild to force regeneration of static assets",
             "resolved": true
         },
         {
-            "error": "Loading spinner persists when data is empty",
-            "solution": "Added entries.length > 0 check and setHasMore(false) logic",
+            "error": "Local build failing with 500 error",
+            "solution": "Create .env.local with Supabase credentials for local testing",
             "resolved": true
         }
     ],
     "decisions_made": [
         {
-            "decision": "Use timeout for Auth/Follow hooks",
-            "reason": "Prevent UI freeze if Supabase is slow or unresponsive"
+            "decision": "Make Community Feed public and set as homepage",
+            "reason": "Better user engagement - visitors can see content immediately without signup"
         },
         {
-            "decision": "Deploy code as-is using PM2",
-            "reason": "Direct and simplest approach for current VPS setup"
+            "decision": "Use 'The FRIDGE' as brand name with fridge icon",
+            "reason": "More memorable and visual identity, relates to 'Tủ Lạnh' concept"
+        },
+        {
+            "decision": "Remove English language completely",
+            "reason": "Target audience is Vietnamese users only, simplifies codebase"
+        },
+        {
+            "decision": "Use orange stroke for logo text",
+            "reason": "Creates visual contrast and premium feel"
+        },
+        {
+            "decision": "Always clear .next cache when deploying asset changes",
+            "reason": "Prevents serving stale cached versions of logos/icons"
         }
     ],
+    "deployment_notes": {
+        "last_deploy": "2026-02-06T04:58:00Z",
+        "deploy_method": "Automated SSH deployment via ssh2 library",
+        "vps_ip": "43.228.214.174",
+        "pm2_app_name": "tulanh",
+        "build_time": "~12-15 seconds",
+        "cache_strategy": "Clear .next folder for asset updates, keep for code-only updates"
+    },
     "audit_summary": {
         "date": "2026-02-05",
         "score": "9.5/10",

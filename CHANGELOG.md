@@ -1,37 +1,59 @@
 # Changelog
 
-All notable changes to the **Tủ Lạnh (Tulanh Online)** project will be documented in this file.
+## [2026-02-06] - Branding & Localization Update
 
-## [2.1.0] - 2026-02-05 (Fixes & VPS Deploy)
+### Added
+- **Logo mới "The FRIDGE"**: Text với viền cam sáng (#f97316) và icon tủ lạnh
+- **Favicon custom**: Sử dụng hình ảnh tủ lạnh thay vì favicon mặc định
+- **Public Community Access**: Cho phép người dùng chưa đăng nhập xem bài viết đã duyệt
+- **RLS Migration**: `20260206_make_community_posts_public.sql` - Cập nhật policy cho public access
 
-### 🚀 Deployed
-- **VPS Deployment**: Deployed production build to `43.228.214.174` using PM2.
-- **Environment**: Configured `.env.local` on production server.
+### Changed
+- **Trang chủ**: Hiển thị Community Feed ngay lập tức thay vì Landing Page
+- **Ngôn ngữ**: Loại bỏ hoàn toàn tiếng Anh, chỉ giữ lại 100% Tiếng Việt
+- **LanguageContext**: Đơn giản hóa, cố định ngôn ngữ Tiếng Việt
+- **Header**: Xóa Language Selector, cập nhật logo mới
 
-### 🐛 Fixed
-- **Critical**: Fixed "Frozen Loading Icon" issue where the interface would hang due to missing Supabase credentials.
-- **UI**: Fixed loading spinner persisting on "My Journal" and "Feed" when no entries/posts exist.
-- **Stability**: Added timeouts (8s-10s) and error handling to `useSupabaseAuth`, `useFollow`, and `usePosts` hooks to prevent infinite loading loops.
-- **Logic**: Corrected `hasMore` logic in infinite scroll to properly handle empty initial states.
+### Removed
+- Language Selector component
+- English language support
+- LandingPage component khỏi homepage flow
+- `favicon.ico` (thay bằng `icon.png`)
 
-### 🔧 Refactor
-- Improved error handling in `useSupabaseAuth` initialization.
+### Fixed
+- VPS cache issue khi update assets (giải pháp: xóa `.next` folder trước khi build)
+- Local build error do thiếu `.env.local`
+
+### Technical Details
+- **Logo Effects**: 
+  - Text stroke: `1px #f97316` (orange)
+  - Glow: `drop-shadow-[0_0_8px_rgba(56,189,248,0.6)]` (blue)
+  - Icon: `/images/fridge-logo.png` (đặt sau text)
+- **Deployment**: Automated SSH deployment với cache clearing strategy
 
 ---
 
-## [2.0.0] - 2026-02-05 (Audit & Optimizations)
+## [2026-02-05] - Stability & Deployment
 
-### 🔄 Changed
-- Refactored `GamificationContext` to fix hoisting errors.
-- Split `Class` page components (AdminDashboard, ContentLocked) for better maintainability.
-- Updated dependencies: `@supabase/supabase-js`, `react`, `next`.
+### Added
+- Automated deployment script via SSH
+- Timeout mechanism cho Supabase hooks
+- Error handling cho loading states
 
-### 🛡️ Security
-- Completed full security audit (Score: 9/10).
-- Confirmed RLS policies on all sensitive tables.
+### Changed
+- Deploy to VPS (43.228.214.174) using PM2
+
+### Fixed
+- Loading spinner stuck on empty Journal & Feed
+- Infinite loading state khi Supabase chậm
 
 ---
 
-## [1.0.0] - 2026-01-30 (Initial Release)
-- Initial release of Tủ Lạnh Online.
-- Features: Community, Classes, Notes, Productivity Tools.
+## [2026-01-30] - Initial Release
+
+### Added
+- Gamification system (XP, Ranks, Badges)
+- Community features (Posts, Likes, Comments)
+- Note-taking với Markdown
+- Productivity tools (Todos, Journal, Pomodoro)
+- Supabase Auth + Google OAuth
