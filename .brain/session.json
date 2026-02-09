@@ -1,17 +1,17 @@
 {
-    "updated_at": "2026-02-06T05:00:00Z",
+    "updated_at": "2026-02-09T03:30:00Z",
     "working_on": {
-        "feature": "Branding & Localization",
-        "task": "Update logo, favicon, and remove English language",
+        "feature": "Social Sharing",
+        "task": "Fix Share Button functionality and add Single Post Page",
         "status": "completed",
         "files": [
-            "src/components/layout/Header.tsx",
-            "src/context/LanguageContext.tsx",
-            "src/app/icon.png",
-            "public/images/fridge-logo.png"
+            "src/app/post/[id]/page.tsx",
+            "src/components/feed/post-card/PostActions.tsx",
+            "src/components/feed/post-card/PostHeader.tsx",
+            "src/components/feed/PostCard.tsx"
         ],
         "blockers": [],
-        "notes": "Đã hoàn thành việc rebrand thành 'The FRIDGE' và loại bỏ hoàn toàn tiếng Anh"
+        "notes": "Đã triển khai thành công tính năng share với SSR và clipboard copy fallback"
     },
     "pending_tasks": [
         {
@@ -27,98 +27,84 @@
     ],
     "recent_changes": [
         {
-            "timestamp": "2026-02-06T04:00:00Z",
+            "timestamp": "2026-02-09T02:50:00Z",
             "type": "feature",
-            "description": "Make Community page public - Allow unauthenticated users to view approved posts",
+            "description": "Added Single Post Page (/post/[id]) with SSR metadata for better sharing preview",
             "files": [
-                "src/app/page.tsx",
-                "supabase/migrations/20260206_make_community_posts_public.sql"
+                "src/app/post/[id]/page.tsx",
+                "src/components/feed/SinglePostView.tsx"
             ]
         },
         {
-            "timestamp": "2026-02-06T04:15:00Z",
-            "type": "branding",
-            "description": "Update logo to 'The FRIDGE' with fridge icon and orange stroke effect",
-            "files": [
-                "src/components/layout/Header.tsx",
-                "public/images/fridge-logo.png"
-            ]
-        },
-        {
-            "timestamp": "2026-02-06T04:20:00Z",
-            "type": "branding",
-            "description": "Replace favicon with fridge logo",
-            "files": [
-                "src/app/favicon.ico (deleted)",
-                "src/app/icon.png (created)"
-            ]
-        },
-        {
-            "timestamp": "2026-02-06T04:30:00Z",
+            "timestamp": "2026-02-09T03:10:00Z",
             "type": "feature",
-            "description": "Set Community Feed as homepage for all users (logged in or not)",
+            "description": "Enhance Share Button with Clipboard Copy and Facebook Dialog",
             "files": [
-                "src/app/page.tsx"
+                "src/components/feed/post-card/PostActions.tsx"
             ]
         },
         {
-            "timestamp": "2026-02-06T04:55:00Z",
-            "type": "localization",
-            "description": "Remove English language - Vietnamese only",
+            "timestamp": "2026-02-09T03:15:00Z",
+            "type": "fix",
+            "description": "Fixed post timestamp link to point to detail page",
             "files": [
-                "src/context/LanguageContext.tsx",
-                "src/components/layout/Header.tsx"
+                "src/components/feed/post-card/PostHeader.tsx"
+            ]
+        },
+        {
+            "timestamp": "2026-02-09T03:20:00Z",
+            "type": "fix",
+            "description": "Added preventDefault/stopPropagation to share button to fix interaction issues",
+            "files": [
+                "src/components/feed/post-card/PostActions.tsx"
             ]
         }
     ],
     "errors_encountered": [
         {
-            "error": "VPS showing old logo after deployment",
-            "solution": "Clear .next cache folder before rebuild to force regeneration of static assets",
+            "error": "Share button not working on VPS/Production",
+            "solution": "Added event.preventDefault() and stopPropagation(), plus fallback to clipboard copy",
             "resolved": true
         },
         {
-            "error": "Local build failing with 500 error",
-            "solution": "Create .env.local with Supabase credentials for local testing",
+            "error": "VPS showing old version after deploy",
+            "solution": "Manually removed .next folder and force rebuild (npm run build)",
             "resolved": true
+        },
+        {
+            "error": "Auth Callback error (pkce_code_verifier_not_found)",
+            "solution": "Likely cookie issue, advise user to clear cache/cookies or check domain/protocol match",
+            "resolved": false
         }
     ],
     "decisions_made": [
         {
-            "decision": "Make Community Feed public and set as homepage",
-            "reason": "Better user engagement - visitors can see content immediately without signup"
+            "decision": "Use SSR for Post Detail Page",
+            "reason": "Crucial for Open Graph metadata (Facebook/Twitter cards) to work correctly"
         },
         {
-            "decision": "Use 'The FRIDGE' as brand name with fridge icon",
-            "reason": "More memorable and visual identity, relates to 'Tủ Lạnh' concept"
+            "decision": "Implement 'Copy Link' + Toast as primary share feedback",
+            "reason": "More reliable than opening popups which might be blocked by browsers"
         },
         {
-            "decision": "Remove English language completely",
-            "reason": "Target audience is Vietnamese users only, simplifies codebase"
-        },
-        {
-            "decision": "Use orange stroke for logo text",
-            "reason": "Creates visual contrast and premium feel"
-        },
-        {
-            "decision": "Always clear .next cache when deploying asset changes",
-            "reason": "Prevents serving stale cached versions of logos/icons"
+            "decision": "Link post timestamp to detail page",
+            "reason": "Standard UX pattern for social media feeds"
         }
     ],
     "deployment_notes": {
-        "last_deploy": "2026-02-06T04:58:00Z",
-        "deploy_method": "Automated SSH deployment via ssh2 library",
+        "last_deploy": "2026-02-09T03:02:00Z",
+        "deploy_method": "Manual SSH + Git Pull + PM2",
         "vps_ip": "43.228.214.174",
         "pm2_app_name": "tulanh",
-        "build_time": "~12-15 seconds",
-        "cache_strategy": "Clear .next folder for asset updates, keep for code-only updates"
+        "build_time": "~50 seconds",
+        "cache_strategy": "Force clear .next folder"
     },
     "audit_summary": {
-        "date": "2026-02-05",
-        "score": "9.5/10",
+        "date": "2026-02-09",
+        "score": "9.6/10",
         "critical_issues": 0,
         "warnings": 0,
-        "suggestions": 5,
+        "suggestions": 2,
         "npm_vulnerabilities": 0
     }
 }

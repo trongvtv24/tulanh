@@ -3,7 +3,7 @@
         "schema_version": "1.1.0",
         "awf_version": "4.0.2",
         "created_at": "2026-01-30T00:00:00Z",
-        "updated_at": "2026-02-06T05:00:00Z"
+        "updated_at": "2026-02-09T03:30:00Z"
     },
     "project": {
         "name": "The FRIDGE (Tủ Lạnh)",
@@ -38,13 +38,14 @@
             "port": "3000",
             "process_manager": "PM2 (app name: tulanh)",
             "node_version": "24.13.0",
-            "domain": "tulanh.online (pending DNS)"
+            "domain": "tulanh.online"
         },
         "key_packages": {
             "@supabase/supabase-js": "2.94.1",
             "react": "19.2.3",
             "next": "16.1.6",
-            "tailwindcss": "3.4.19"
+            "tailwindcss": "3.4.19",
+            "sonner": "latest"
         }
     },
     "database_schema": {
@@ -140,6 +141,11 @@
             "path": "/api/posts",
             "method": "GET",
             "explained": "Lấy danh sách bài viết (public access cho approved posts)"
+        },
+        {
+            "path": "/post/[id]",
+            "method": "GET",
+            "explained": "Trang chi tiết bài viết (SSR) để SEO và chia sẻ mạng xã hội"
         }
     ],
     "features": [
@@ -157,6 +163,11 @@
             "name": "Community",
             "status": "Implemented",
             "description": "Public Community Feed - Newsfeed hiển thị ngay khi vào trang chủ, không cần đăng nhập để xem bài viết"
+        },
+        {
+            "name": "Social Sharing",
+            "status": "Implemented",
+            "description": "Chia sẻ bài viết lên Facebook với Open Graph metadata, Copy link vào clipboard"
         },
         {
             "name": "Classes",
@@ -197,13 +208,16 @@
             "Next.js Server Components for data fetching",
             "Server Actions for CRUD",
             "Set explicit loading timeout (e.g., 10s) for Auth/API hooks to prevent freezing",
-            "Public community feed as homepage for better engagement"
+            "Public community feed as homepage for better engagement",
+            "SSR for detail pages (/post/[id]) to ensure correct Open Graph metadata"
         ],
         "gotchas": [
             "Missing .env.local causes Next.js runtime crashes",
             "Loading spinners must check if data is actually empty to avoid persistent spinners",
             "useSupabaseAuth hook needs try-catch and timeout for robust initialization",
-            "VPS cache (.next folder) cần xóa khi update assets (logo, favicon)"
+            "VPS cache (.next folder) cần xóa khi update assets (logo, favicon)",
+            "Facebook Share requires valid Open Graph meta tags on the target page",
+            "Button interactions inside nested links/divs need e.preventDefault() and e.stopPropagation()"
         ],
         "branding": {
             "logo_text": "The FRIDGE",
@@ -219,7 +233,7 @@
                 "npm run build",
                 "pm2 restart tulanh"
             ],
-            "cache_clear": "rm -rf .next (when updating static assets)"
+            "cache_clear": "rm -rf .next (when updating static assets or fixing weird cache issues)"
         }
     }
 }

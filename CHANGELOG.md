@@ -1,6 +1,23 @@
 # Changelog
 
-## [2026-02-06] - Branding & Localization Update
+## [2026-02-09] - Social Sharing & Post Details
+ 
+ ### Added
+ - **Single Post Page**: Route `/post/[id]` với Server-Side Rendering (SSR) để tối ưu SEO và metadata khi chia sẻ.
+ - **Facebook Share**: Nút chia sẻ tích hợp, tự động copy link vào clipboard và mở dialog chia sẻ.
+ - **Toast Notification**: Thông báo "Đã copy link" khi chia sẻ.
+ 
+ ### Changed
+ - **Post Timestamps**: Thời gian đăng bài giờ là liên kết dẫn trực tiếp đến trang chi tiết bài viết.
+ - **PostActions**: Cập nhật logic xử lý sự kiện click để tránh xung đột (preventDefault/stopPropagation).
+ 
+ ### Fixed
+ - **Share Button**: Sửa lỗi nút share không hoạt động trên một số trình duyệt/VPS do popup blocker hoặc event bubbling.
+ - **Metadata**: Cập nhật OpenGraph tags cho trang chi tiết bài viết.
+ 
+ ---
+ 
+ ## [2026-02-06] - Branding & Localization Update
 
 ### Added
 - **Logo mới "The FRIDGE"**: Text với viền cam sáng (#f97316) và icon tủ lạnh
