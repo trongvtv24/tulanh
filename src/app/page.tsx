@@ -41,4 +41,3 @@ export default function Home() {
   // Modified: Allow public access (Feed component handles auth check for create post)
   return <Feed />;
 }
-

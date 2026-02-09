@@ -70,27 +70,26 @@ Hiện tại, các giải pháp sẵn có:
 
 ### Đối Thủ Chính:
 
-| App                  | Điểm Mạnh                                                                                      | Điểm Yếu                                                                              | Lesson Learned                                                         |
-| -------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| App            | Điểm Mạnh                                                                         | Điểm Yếu                                                                   | Lesson Learned                                                   |
+| -------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | **Obsidian**   | • Markdown thuần`<br>`• Tag phân cấp`<br>`• Tìm kiếm mạnh`<br>`• Plugin ecosystem | • Phức tạp cho người mới`<br>`• Sync tốn phí`<br>`• Desktop-first          | → Học: Tag syntax (#parent/child)`<br>`→ Tránh: Over-engineering |
-| **Notion**     | • UI đẹp`<br>`• Database mạnh`<br>`• Collaboration                                      | • Không Markdown thuần`<br>`• Tag không phân cấp`<br>`• Phụ thuộc platform | → Học: URL preview card`<br>`→ Tránh: Quá nhiều tính năng    |
-| **Bear Notes** | • UI tối giản đẹp`<br>`• Tag phân cấp`<br>`• Tìm kiếm tốt                         | • Chỉ Apple`<br>`• Không web                                                       | → Học: Minimalist UI`<br>`→ Học: Tag autocomplete                |
-| **Logseq**     | • Open source`<br>`• Markdown + outliner                                                      | • UI phức tạp`<br>`• Learning curve cao                                            | → Tránh: Quá nhiều concept mới                                    |
+| **Notion**     | • UI đẹp`<br>`• Database mạnh`<br>`• Collaboration                                | • Không Markdown thuần`<br>`• Tag không phân cấp`<br>`• Phụ thuộc platform | → Học: URL preview card`<br>`→ Tránh: Quá nhiều tính năng        |
+| **Bear Notes** | • UI tối giản đẹp`<br>`• Tag phân cấp`<br>`• Tìm kiếm tốt                         | • Chỉ Apple`<br>`• Không web                                               | → Học: Minimalist UI`<br>`→ Học: Tag autocomplete                |
+| **Logseq**     | • Open source`<br>`• Markdown + outliner                                          | • UI phức tạp`<br>`• Learning curve cao                                    | → Tránh: Quá nhiều concept mới                                   |
 
 ### Điểm Khác Biệt Của MarkNote:
 
 1. **🎯 Đơn giản & Tập trung**
-
    - Không cố làm "all-in-one" như Notion
    - Chỉ làm tốt 1 việc: Lưu + Tìm ghi chú/URL
    - UI tối giản, không phân tán
-2. **🌐 Web-first, Open Data**
 
+2. **🌐 Web-first, Open Data**
    - Không lock-in vào platform
    - Data lưu Supabase (PostgreSQL) → export dễ dàng
    - Truy cập mọi thiết bị qua browser
-3. **🔗 URL-friendly**
 
+3. **🔗 URL-friendly**
    - Tự động fetch metadata cho URL (title, description)
    - Preview đẹp cho link
    - Phân biệt rõ giữa ghi chú text và URL bookmark
@@ -103,59 +102,59 @@ Hiện tại, các giải pháp sẵn có:
 
 #### Authentication:
 
-- [X] Đăng ký/Đăng nhập (email + password) - Supabase Auth
-- [X] Đăng xuất
+- [x] Đăng ký/Đăng nhập (email + password) - Supabase Auth
+- [x] Đăng xuất
 - [ ] ~~Quên mật khẩu~~ → Phase 2
 
 #### Ghi Chú - Core:
 
-- [X] Tạo ghi chú mới (tiêu đề + nội dung Markdown)
-- [X] Sửa ghi chú
-- [X] Xóa ghi chú (có confirm dialog)
-- [X] Tự động lưu (auto-save sau 2s không gõ)
-- [X] Hiển thị ngày tạo/sửa cuối
-- [X] Markdown editor + live preview (split view)
+- [x] Tạo ghi chú mới (tiêu đề + nội dung Markdown)
+- [x] Sửa ghi chú
+- [x] Xóa ghi chú (có confirm dialog)
+- [x] Tự động lưu (auto-save sau 2s không gõ)
+- [x] Hiển thị ngày tạo/sửa cuối
+- [x] Markdown editor + live preview (split view)
 - [ ] ~~Markdown toolbar~~ → User gõ Markdown thuần
 
 #### URL Handling:
 
-- [X] Phát hiện URL trong nội dung
-- [X] Tạo ghi chú từ URL (paste link → tự động fetch metadata)
-- [X] Fetch title + description (Open Graph protocol)
-- [X] Hiển thị preview card cho URL
+- [x] Phát hiện URL trong nội dung
+- [x] Tạo ghi chú từ URL (paste link → tự động fetch metadata)
+- [x] Fetch title + description (Open Graph protocol)
+- [x] Hiển thị preview card cho URL
 - [ ] ~~Thumbnail~~ → Phase 2 (tốn bandwidth)
 
 #### Hashtag - Core:
 
-- [X] Gắn hashtag vào ghi chú (nhiều hashtag/1 ghi chú)
-- [X] Hashtag phân cấp (#work/project-a/task-1)
-- [X] Tag autocomplete (gõ # → gợi ý tag có sẵn)
-- [X] Sidebar hiển thị tag tree (cấu trúc cây)
-- [X] Click tag → filter ghi chú theo tag
-- [X] Đếm số ghi chú/tag
+- [x] Gắn hashtag vào ghi chú (nhiều hashtag/1 ghi chú)
+- [x] Hashtag phân cấp (#work/project-a/task-1)
+- [x] Tag autocomplete (gõ # → gợi ý tag có sẵn)
+- [x] Sidebar hiển thị tag tree (cấu trúc cây)
+- [x] Click tag → filter ghi chú theo tag
+- [x] Đếm số ghi chú/tag
 - [ ] ~~Đổi tên/xóa/gộp tag~~ → Phase 2
 
 #### Tìm Kiếm:
 
-- [X] Tìm kiếm toàn văn (tiêu đề + nội dung)
-- [X] Tìm theo hashtag (click tag hoặc search)
-- [X] Highlight kết quả tìm kiếm
+- [x] Tìm kiếm toàn văn (tiêu đề + nội dung)
+- [x] Tìm theo hashtag (click tag hoặc search)
+- [x] Highlight kết quả tìm kiếm
 - [ ] ~~Tìm kiếm nâng cao, saved searches~~ → Phase 2
 
 #### Hiển Thị:
 
-- [X] List view (danh sách ghi chú)
-- [X] Sắp xếp (mới nhất, cũ nhất)
-- [X] Responsive design (PC + Mobile)
+- [x] List view (danh sách ghi chú)
+- [x] Sắp xếp (mới nhất, cũ nhất)
+- [x] Responsive design (PC + Mobile)
 - [ ] ~~Grid view, pin, favorite, archive~~ → Phase 2
 
 #### UI:
 
-- [X] **Dark mode + Light mode** (toggle)
-- [X] Sidebar (tag tree + search)
-- [X] Editor (Markdown với syntax highlighting)
-- [X] Preview pane (live preview)
-- [X] Responsive layout
+- [x] **Dark mode + Light mode** (toggle)
+- [x] Sidebar (tag tree + search)
+- [x] Editor (Markdown với syntax highlighting)
+- [x] Preview pane (live preview)
+- [x] Responsive layout
 - [ ] ~~Focus mode, màu sắc tag~~ → Phase 2
 
 ---
@@ -365,19 +364,18 @@ CREATE INDEX idx_notes_search ON notes USING GIN(to_tsvector('english', title ||
 ### Rủi Ro Kỹ Thuật:
 
 1. **URL Metadata Fetching:**
-
    - **Vấn đề:** Một số website chặn scraping, không có Open Graph tags
    - **Giải pháp:** Fallback về title từ `<title>` tag, hoặc để user tự nhập
-2. **Full-text Search Performance:**
 
+2. **Full-text Search Performance:**
    - **Vấn đề:** Khi có hàng nghìn ghi chú, search có thể chậm
    - **Giải pháp:** Supabase PostgreSQL có GIN index, tối ưu tốt. Nếu vẫn chậm, dùng Algolia/Meilisearch
-3. **Hashtag Parsing:**
 
+3. **Hashtag Parsing:**
    - **Vấn đề:** User có thể gõ sai format (#tag/with space)
    - **Giải pháp:** Validate và sanitize tag input, gợi ý format đúng
-4. **Mobile UX:**
 
+4. **Mobile UX:**
    - **Vấn đề:** Split view (editor + preview) khó hiển thị trên mobile
    - **Giải pháp:** Mobile dùng tab switching (Edit/Preview), PC dùng split
 
@@ -388,22 +386,21 @@ CREATE INDEX idx_notes_search ON notes USING GIN(to_tsvector('english', title ||
 ### UI/UX Guidelines:
 
 1. **Minimalism First:**
-
    - Ít button, ít menu
    - Mọi thứ trong tầm tay (sidebar + editor)
    - Không popup/modal không cần thiết
-2. **Focus on Content:**
 
+2. **Focus on Content:**
    - Editor chiếm phần lớn màn hình
    - Sidebar có thể thu gọn
    - Không quảng cáo, không distraction
-3. **Speed:**
 
+3. **Speed:**
    - Auto-save nhanh (debounce 2s)
    - Search instant (as-you-type)
    - Load time < 2s
-4. **Accessibility:**
 
+4. **Accessibility:**
    - Dark mode cho mắt
    - Keyboard shortcuts cho power users
    - Responsive cho mọi thiết bị
@@ -451,10 +448,10 @@ CREATE INDEX idx_notes_search ON notes USING GIN(to_tsvector('english', title ||
 
 ### ✅ Đã Hoàn Thành:
 
-- [X] Brainstorm ý tưởng
-- [X] Research thị trường
-- [X] Xác định MVP features
-- [X] Tạo BRIEF document
+- [x] Brainstorm ý tưởng
+- [x] Research thị trường
+- [x] Xác định MVP features
+- [x] Tạo BRIEF document
 
 ### 🎯 Next Steps:
 

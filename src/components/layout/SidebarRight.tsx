@@ -11,159 +11,216 @@ import { useLeaderboard } from "@/hooks/useLeaderboard";
 import Link from "next/link";
 import { MessageCircle, CalendarCheck, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RankBadge, RankBadgeInline } from "@/components/gamification/RankBadge";
+import {
+  RankBadge,
+  RankBadgeInline,
+} from "@/components/gamification/RankBadge";
 import { getRankByLevel, GAMIFICATION_RULES } from "@/config/ranks";
 import { toast } from "sonner";
 
 export function SidebarRight() {
-    const { level, xp, badges, xpToNextLevel, profileName, avatarUrl, performDailyCheckin, hasCheckedInToday, imagePostLimit } = useGamification();
-    const { t, language } = useLanguage();
-    const { user: authUser } = useSupabaseAuth();
-    const { leaders, loading: loadingLeaderboard } = useLeaderboard();
-    const [isCheckingIn, setIsCheckingIn] = useState(false);
+  const {
+    level,
+    xp,
+    badges,
+    xpToNextLevel,
+    profileName,
+    avatarUrl,
+    performDailyCheckin,
+    hasCheckedInToday,
+    imagePostLimit,
+  } = useGamification();
+  const { t, language } = useLanguage();
+  const { user: authUser } = useSupabaseAuth();
+  const { leaders, loading: loadingLeaderboard } = useLeaderboard();
+  const [isCheckingIn, setIsCheckingIn] = useState(false);
 
-    const handleCheckin = async () => {
-        setIsCheckingIn(true);
-        const result = await performDailyCheckin();
-        if (result.success) {
-            toast.success(result.message);
-        } else {
-            toast.info(result.message);
-        }
-        setIsCheckingIn(false);
-    };
+  const handleCheckin = async () => {
+    setIsCheckingIn(true);
+    const result = await performDailyCheckin();
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      toast.info(result.message);
+    }
+    setIsCheckingIn(false);
+  };
 
-    // Use profile data from GamificationContext (synced with database)
-    const user = authUser ? {
+  // Use profile data from GamificationContext (synced with database)
+  const user = authUser
+    ? {
         name: profileName || "Builder User",
         avatar: avatarUrl || "",
         title: "Member",
-    } : {
+      }
+    : {
         name: "Guest",
         avatar: "",
-        title: "Visitor"
-    };
+        title: "Visitor",
+      };
 
-    return (
-        <div className="space-y-6">
-            <Card className="border-none shadow-none bg-transparent sm:bg-card sm:border sm:shadow-sm">
-                <CardHeader className="pb-2 pt-4 px-0 sm:px-6">
-                    <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{t.sidebar.yourProgress}</CardTitle>
-                </CardHeader>
-                <CardContent className="px-0 sm:px-6">
-                    <div className="flex items-center gap-4 mb-4">
-                        {/* Rank Badge thay cho Avatar */}
-                        <div className="relative">
-                            <RankBadge level={level} size="lg" showTooltip={true} />
-                        </div>
-                        <div className="flex-1">
-                            <div className="font-bold text-base">
-                                {user.name}
-                            </div>
-                            <div className={`text-xs font-medium px-2 py-0.5 rounded-full inline-block mt-1 text-white bg-muted border border-border/50`}>
-                                {getRankByLevel(level).nameVi} • Lv.{level}
-                            </div>
-                        </div>
-                    </div>
+  return (
+    <div className="space-y-6">
+      <Card className="border-none shadow-none bg-transparent sm:bg-card sm:border sm:shadow-sm">
+        <CardHeader className="pb-2 pt-4 px-0 sm:px-6">
+          <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            {t.sidebar.yourProgress}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-0 sm:px-6">
+          <div className="flex items-center gap-4 mb-4">
+            {/* Rank Badge thay cho Avatar */}
+            <div className="relative">
+              <RankBadge level={level} size="lg" showTooltip={true} />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold text-base">{user.name}</div>
+              <div
+                className={`text-xs font-medium px-2 py-0.5 rounded-full inline-block mt-1 text-white bg-muted border border-border/50`}
+              >
+                {getRankByLevel(level).nameVi} • Lv.{level}
+              </div>
+            </div>
+          </div>
 
-                    <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-medium">
-                            <span className="flex items-center gap-1">
-                                <span className="text-primary">⚡</span> {t.sidebar.xpProgress}
-                            </span>
-                            <span className="text-muted-foreground font-mono">
-                                {Math.round(xp)}<span className="opacity-50">/{xpToNextLevel}</span>
-                            </span>
-                        </div>
-                        <div className="relative">
-                            <Progress value={(xp / xpToNextLevel) * 100} className="h-3" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-[10px] font-bold text-primary-foreground drop-shadow-sm">
-                                    {Math.round((xp / xpToNextLevel) * 100)}%
-                                </span>
-                            </div>
-                        </div>
-                        <p className="text-[10px] text-muted-foreground text-center">
-                            {level < 5
-                                ? t.sidebar.xpToLevel.replace('{xp}', String(xpToNextLevel)).replace('{level}', String(level + 1))
-                                : t.sidebar.maxLevel
-                            }
-                        </p>
-                    </div>
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-medium">
+              <span className="flex items-center gap-1">
+                <span className="text-primary">⚡</span> {t.sidebar.xpProgress}
+              </span>
+              <span className="text-muted-foreground font-mono">
+                {Math.round(xp)}
+                <span className="opacity-50">/{xpToNextLevel}</span>
+              </span>
+            </div>
+            <div className="relative">
+              <Progress value={(xp / xpToNextLevel) * 100} className="h-3" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[10px] font-bold text-primary-foreground drop-shadow-sm">
+                  {Math.round((xp / xpToNextLevel) * 100)}%
+                </span>
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground text-center">
+              {level < 5
+                ? t.sidebar.xpToLevel
+                    .replace("{xp}", String(xpToNextLevel))
+                    .replace("{level}", String(level + 1))
+                : t.sidebar.maxLevel}
+            </p>
+          </div>
 
-                    {/* Daily Check-in Button */}
-                    {authUser && (
-                        <div className="mt-4 space-y-2">
-                            <Button
-                                onClick={handleCheckin}
-                                disabled={hasCheckedInToday || isCheckingIn}
-                                variant={hasCheckedInToday ? "secondary" : "default"}
-                                className="w-full gap-2"
-                                size="sm"
-                            >
-                                <CalendarCheck className="h-4 w-4" />
-                                {hasCheckedInToday ? t.sidebar.alreadyCheckedIn : t.sidebar.dailyCheckin}
-                            </Button>
+          {/* Daily Check-in Button */}
+          {authUser && (
+            <div className="mt-4 space-y-2">
+              <Button
+                onClick={handleCheckin}
+                disabled={hasCheckedInToday || isCheckingIn}
+                variant={hasCheckedInToday ? "secondary" : "default"}
+                className="w-full gap-2"
+                size="sm"
+              >
+                <CalendarCheck className="h-4 w-4" />
+                {hasCheckedInToday
+                  ? t.sidebar.alreadyCheckedIn
+                  : t.sidebar.dailyCheckin}
+              </Button>
 
-                            {/* Image Limit Info */}
-                            <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground">
-                                <ImageIcon className="h-3 w-3" />
-                                <span>{t.sidebar.imageLimit.replace('{description}', imagePostLimit.description)}</span>
-                            </div>
-                        </div>
+              {/* Image Limit Info */}
+              <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground">
+                <ImageIcon className="h-3 w-3" />
+                <span>
+                  {t.sidebar.imageLimit.replace(
+                    "{description}",
+                    imagePostLimit.description,
+                  )}
+                </span>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="hidden xl:block">
+        <CardHeader>
+          <CardTitle className="text-sm font-bold">
+            {t.sidebar.leaderboard}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {loadingLeaderboard ? (
+            <div className="text-xs text-muted-foreground text-center">
+              {t.common.loading}
+            </div>
+          ) : leaders.length > 0 ? (
+            leaders.map((leader, i) => (
+              <div
+                key={leader.id}
+                className="flex items-center gap-3 text-sm group p-2 rounded-md -mx-2 hover:bg-secondary/50 transition-colors"
+              >
+                <div
+                  className={`font-bold w-5 text-center ${i === 0 ? "text-yellow-500" : i === 1 ? "text-gray-400" : i === 2 ? "text-amber-700" : "text-muted-foreground"}`}
+                >
+                  {i + 1}
+                </div>
+
+                <Link
+                  href={`/profile/${leader.id}`}
+                  className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer"
+                >
+                  {/* Rank Badge nhỏ */}
+                  <RankBadge
+                    level={leader.level}
+                    size="sm"
+                    showTooltip={false}
+                    showGlow={false}
+                  />
+                  <div className="flex-1 truncate">
+                    <span className="font-medium hover:underline decoration-primary">
+                      {leader.full_name}
+                    </span>
+                    {leader.id === authUser?.id && (
+                      <span className="ml-1 text-[10px] text-primary">
+                        (You)
+                      </span>
                     )}
-                </CardContent>
-            </Card>
+                    <div
+                      className={`text-[10px] ${getRankByLevel(leader.level).color}`}
+                    >
+                      {getRankByLevel(leader.level).nameVi}
+                    </div>
+                  </div>
+                </Link>
 
-            <Card className="hidden xl:block">
-                <CardHeader>
-                    <CardTitle className="text-sm font-bold">{t.sidebar.leaderboard}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    {loadingLeaderboard ? (
-                        <div className="text-xs text-muted-foreground text-center">{t.common.loading}</div>
-                    ) : leaders.length > 0 ? (
-                        leaders.map((leader, i) => (
-                            <div
-                                key={leader.id}
-                                className="flex items-center gap-3 text-sm group p-2 rounded-md -mx-2 hover:bg-secondary/50 transition-colors"
-                            >
-                                <div className={`font-bold w-5 text-center ${i === 0 ? 'text-yellow-500' : i === 1 ? 'text-gray-400' : i === 2 ? 'text-amber-700' : 'text-muted-foreground'}`}>
-                                    {i + 1}
-                                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="font-bold text-primary text-xs hidden sm:inline-block">
+                    {leader.xp + leader.level * 100} XP
+                  </span>
 
-                                <Link href={`/profile/${leader.id}`} className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer">
-                                    {/* Rank Badge nhỏ */}
-                                    <RankBadge level={leader.level} size="sm" showTooltip={false} showGlow={false} />
-                                    <div className="flex-1 truncate">
-                                        <span className="font-medium hover:underline decoration-primary">
-                                            {leader.full_name}
-                                        </span>
-                                        {leader.id === authUser?.id && <span className="ml-1 text-[10px] text-primary">(You)</span>}
-                                        <div className={`text-[10px] ${getRankByLevel(leader.level).color}`}>
-                                            {getRankByLevel(leader.level).nameVi}
-                                        </div>
-                                    </div>
-                                </Link>
-
-                                <div className="flex items-center gap-2 shrink-0">
-                                    <span className="font-bold text-primary text-xs hidden sm:inline-block">{leader.xp + (leader.level * 100)} XP</span>
-
-                                    {leader.id !== authUser?.id && (
-                                        <Link href={`/messages?userId=${leader.id}`} title={`Message ${leader.full_name}`}>
-                                            <Button variant="ghost" size="icon" className="h-7 w-7 opacity-70 hover:opacity-100 hover:bg-primary/20 hover:text-primary">
-                                                <MessageCircle className="h-4 w-4" />
-                                            </Button>
-                                        </Link>
-                                    )}
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="text-xs text-muted-foreground text-center">Be the first to join the leaderboard!</div>
-                    )}
-                </CardContent>
-            </Card>
-        </div>
-    )
+                  {leader.id !== authUser?.id && (
+                    <Link
+                      href={`/messages?userId=${leader.id}`}
+                      title={`Message ${leader.full_name}`}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 opacity-70 hover:opacity-100 hover:bg-primary/20 hover:text-primary"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-xs text-muted-foreground text-center">
+              Be the first to join the leaderboard!
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

@@ -7,7 +7,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 // CORS headers for browser requests
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 interface UrlMetadata {
@@ -24,7 +25,9 @@ function extractMetadata(html: string, url: string): UrlMetadata {
   let description = "";
 
   // OG Title
-  const ogTitleMatch = html.match(/<meta[^>]*property=["']og:title["'][^>]*content=["']([^"']+)["']/i);
+  const ogTitleMatch = html.match(
+    /<meta[^>]*property=["']og:title["'][^>]*content=["']([^"']+)["']/i,
+  );
   if (ogTitleMatch) {
     title = ogTitleMatch[1];
   }
@@ -38,14 +41,18 @@ function extractMetadata(html: string, url: string): UrlMetadata {
   }
 
   // OG Description
-  const ogDescMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i);
+  const ogDescMatch = html.match(
+    /<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i,
+  );
   if (ogDescMatch) {
     description = ogDescMatch[1];
   }
 
   // Fallback to meta description
   if (!description) {
-    const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i);
+    const descMatch = html.match(
+      /<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i,
+    );
     if (descMatch) {
       description = descMatch[1];
     }
@@ -98,14 +105,20 @@ serve(async (req: Request) => {
     if (!url || typeof url !== "string") {
       return new Response(
         JSON.stringify({ error: "URL is required", success: false }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
     if (!isValidUrl(url)) {
       return new Response(
         JSON.stringify({ error: "Invalid URL format", success: false }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
@@ -115,8 +128,9 @@ serve(async (req: Request) => {
 
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; MarkNote/1.0; +https://tulanh.online)",
-        "Accept": "text/html,application/xhtml+xml",
+        "User-Agent":
+          "Mozilla/5.0 (compatible; MarkNote/1.0; +https://tulanh.online)",
+        Accept: "text/html,application/xhtml+xml",
         "Accept-Language": "en-US,en;q=0.9,vi;q=0.8",
       },
       signal: controller.signal,
@@ -126,11 +140,14 @@ serve(async (req: Request) => {
 
     if (!response.ok) {
       return new Response(
-        JSON.stringify({ 
-          error: `Failed to fetch URL: ${response.status}`, 
-          success: false 
+        JSON.stringify({
+          error: `Failed to fetch URL: ${response.status}`,
+          success: false,
         }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        {
+          status: 502,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
@@ -141,29 +158,34 @@ serve(async (req: Request) => {
     // Extract metadata
     const metadata = extractMetadata(truncatedHtml, url);
 
-    return new Response(
-      JSON.stringify(metadata),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
-
+    return new Response(JSON.stringify(metadata), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error) {
     // Handle specific errors
     if (error.name === "AbortError") {
       return new Response(
         JSON.stringify({ error: "Request timeout", success: false }),
-        { status: 504, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        {
+          status: 504,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
     console.error("Error fetching URL metadata:", error);
-    
+
     return new Response(
-      JSON.stringify({ 
-        error: "Failed to fetch metadata", 
+      JSON.stringify({
+        error: "Failed to fetch metadata",
         success: false,
-        details: error.message 
+        details: error.message,
       }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
     );
   }
 });

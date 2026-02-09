@@ -1,71 +1,68 @@
 {
-    "updated_at": "2026-02-08T07:15:00Z",
-    "working_on": {
-        "feature": "Post-Deployment Config",
-        "task": "Update Auth Redirect URLs",
-        "status": "pending",
-        "files": [
-            "Supabase Dashboard (External)",
-            "Google Cloud Console (External)"
-        ],
-        "blockers": [],
-        "notes": "Deployment successful. HTTPS active. Need to update 3rd party auth providers."
+  "updated_at": "2026-02-08T07:15:00Z",
+  "working_on": {
+    "feature": "Post-Deployment Config",
+    "task": "Update Auth Redirect URLs",
+    "status": "pending",
+    "files": [
+      "Supabase Dashboard (External)",
+      "Google Cloud Console (External)"
+    ],
+    "blockers": [],
+    "notes": "Deployment successful. HTTPS active. Need to update 3rd party auth providers."
+  },
+  "pending_tasks": [
+    {
+      "task": "Update Supabase Site URL to https://tulanh.online",
+      "priority": "high",
+      "notes": "Critical for Auth"
     },
-    "pending_tasks": [
-        {
-            "task": "Update Supabase Site URL to https://tulanh.online",
-            "priority": "high",
-            "notes": "Critical for Auth"
-        },
-        {
-            "task": "Update Google OAuth Redirect URI",
-            "priority": "high",
-            "notes": "Critical for Google Login"
-        },
-        {
-            "task": "Monitor VPS stability",
-            "priority": "medium",
-            "notes": "Ensure Swap memory is sufficient for future builds"
-        }
-    ],
-    "recent_changes": [
-        {
-            "timestamp": "2026-02-08T07:10:00Z",
-            "type": "infrastructure",
-            "description": "Automated VPS configuration with configure_vps.ps1",
-            "files": [
-                "configure_vps.ps1",
-                "nginx_base.conf"
-            ]
-        },
-        {
-            "timestamp": "2026-02-08T07:08:00Z",
-            "type": "deployment",
-            "description": "Successfully enabled HTTPS via Let's Encrypt",
-            "files": []
-        }
-    ],
-    "errors_encountered": [],
-    "decisions_made": [
-        {
-            "decision": "Bypass aaPanel UI for Nginx Config",
-            "reason": "Direct file manipulation via SSH script provides more reliable results and avoids UI quirks."
-        }
-    ],
-    "deployment_notes": {
-        "last_deploy": "2026-02-08T07:08:00Z",
-        "deploy_method": "Automated SSH Script (configure_vps.ps1)",
-        "vps_ip": "43.228.214.174",
-        "domain": "https://tulanh.online",
-        "pm2_app_name": "tulanh",
-        "notes": "SSL Enabled. Auto-renew via Certbot."
+    {
+      "task": "Update Google OAuth Redirect URI",
+      "priority": "high",
+      "notes": "Critical for Google Login"
     },
-    "audit_summary": {
-        "date": "2026-02-05",
-        "score": "9.5/10",
-        "critical_issues": 0,
-        "warnings": 0,
-        "suggestions": 5,
-        "npm_vulnerabilities": 0
+    {
+      "task": "Monitor VPS stability",
+      "priority": "medium",
+      "notes": "Ensure Swap memory is sufficient for future builds"
     }
+  ],
+  "recent_changes": [
+    {
+      "timestamp": "2026-02-08T07:10:00Z",
+      "type": "infrastructure",
+      "description": "Automated VPS configuration with configure_vps.ps1",
+      "files": ["configure_vps.ps1", "nginx_base.conf"]
+    },
+    {
+      "timestamp": "2026-02-08T07:08:00Z",
+      "type": "deployment",
+      "description": "Successfully enabled HTTPS via Let's Encrypt",
+      "files": []
+    }
+  ],
+  "errors_encountered": [],
+  "decisions_made": [
+    {
+      "decision": "Bypass aaPanel UI for Nginx Config",
+      "reason": "Direct file manipulation via SSH script provides more reliable results and avoids UI quirks."
+    }
+  ],
+  "deployment_notes": {
+    "last_deploy": "2026-02-08T07:08:00Z",
+    "deploy_method": "Automated SSH Script (configure_vps.ps1)",
+    "vps_ip": "43.228.214.174",
+    "domain": "https://tulanh.online",
+    "pm2_app_name": "tulanh",
+    "notes": "SSL Enabled. Auto-renew via Certbot."
+  },
+  "audit_summary": {
+    "date": "2026-02-05",
+    "score": "9.5/10",
+    "critical_issues": 0,
+    "warnings": 0,
+    "suggestions": 5,
+    "npm_vulnerabilities": 0
+  }
 }

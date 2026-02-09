@@ -1,226 +1,222 @@
 {
-    "meta": {
-        "schema_version": "1.1.0",
-        "awf_version": "4.0.2",
-        "created_at": "2026-01-30T00:00:00Z",
-        "updated_at": "2026-02-06T05:00:00Z"
+  "meta": {
+    "schema_version": "1.1.0",
+    "awf_version": "4.0.2",
+    "created_at": "2026-01-30T00:00:00Z",
+    "updated_at": "2026-02-06T05:00:00Z"
+  },
+  "project": {
+    "name": "The FRIDGE (Tủ Lạnh)",
+    "type": "Social Learning Platform",
+    "status": "production",
+    "description": "Mạng xã hội học tập gamified với Supabase backend - 100% Tiếng Việt",
+    "repository": "https://github.com/trongvtv24/tulanh",
+    "language": "Vietnamese only"
+  },
+  "tech_stack": {
+    "frontend": {
+      "framework": "Next.js 16.1.6 (App Router)",
+      "language": "TypeScript",
+      "ui_library": "Shadcn/UI + Radix UI",
+      "styling": "TailwindCSS 3.4.19",
+      "icons": "lucide-react 0.562.0"
     },
-    "project": {
-        "name": "The FRIDGE (Tủ Lạnh)",
-        "type": "Social Learning Platform",
-        "status": "production",
-        "description": "Mạng xã hội học tập gamified với Supabase backend - 100% Tiếng Việt",
-        "repository": "https://github.com/trongvtv24/tulanh",
-        "language": "Vietnamese only"
+    "backend": {
+      "framework": "Next.js Server Actions",
+      "database": "Supabase (PostgreSQL)",
+      "auth": "Supabase Auth",
+      "project_id": "uoqyotwurkyjdrawqbpe"
     },
-    "tech_stack": {
-        "frontend": {
-            "framework": "Next.js 16.1.6 (App Router)",
-            "language": "TypeScript",
-            "ui_library": "Shadcn/UI + Radix UI",
-            "styling": "TailwindCSS 3.4.19",
-            "icons": "lucide-react 0.562.0"
-        },
-        "backend": {
-            "framework": "Next.js Server Actions",
-            "database": "Supabase (PostgreSQL)",
-            "auth": "Supabase Auth",
-            "project_id": "uoqyotwurkyjdrawqbpe"
-        },
-        "database": {
-            "type": "PostgreSQL (via Supabase)",
-            "orm": "None (Raw SQL / Supabase Client)",
-            "region": "Southeast Asia (Singapore)"
-        },
-        "deployment": {
-            "server": "VPS (Ubuntu 24.04 LTS)",
-            "ip": "43.228.214.174",
-            "port": "3000",
-            "process_manager": "PM2 (app name: tulanh)",
-            "node_version": "24.13.0",
-            "domain": "https://tulanh.online (Active SSL)"
-        },
-        "key_packages": {
-            "@supabase/supabase-js": "2.94.1",
-            "react": "19.2.3",
-            "next": "16.1.6",
-            "tailwindcss": "3.4.19"
-        }
+    "database": {
+      "type": "PostgreSQL (via Supabase)",
+      "orm": "None (Raw SQL / Supabase Client)",
+      "region": "Southeast Asia (Singapore)"
     },
-    "database_schema": {
-        "summary": "Social learning platform với 21 tables. Users -> Posts, Comments, Communities, Notes, Todos, Badges. RLS policies cho public community access.",
-        "tables": [
-            "profiles",
-            "posts",
-            "comments",
-            "likes",
-            "follows",
-            "communities",
-            "community_members",
-            "notifications",
-            "conversations",
-            "direct_messages",
-            "badges",
-            "user_badges",
-            "todos",
-            "notes",
-            "tags",
-            "note_tags",
-            "journal_entries",
-            "daily_checkins",
-            "shares",
-            "post_approvals",
-            "conversation_participants"
-        ],
-        "tulanh_tables": [
-            {
-                "name": "notes",
-                "columns": [
-                    "id",
-                    "user_id",
-                    "title",
-                    "content",
-                    "is_url",
-                    "url",
-                    "url_title",
-                    "url_description",
-                    "url_fetched_at",
-                    "created_at",
-                    "updated_at"
-                ],
-                "description": "Lưu ghi chú Markdown và URL bookmarks"
-            },
-            {
-                "name": "tags",
-                "columns": [
-                    "id",
-                    "user_id",
-                    "name",
-                    "slug",
-                    "parent_id",
-                    "level",
-                    "created_at"
-                ],
-                "description": "Hierarchical tags với parent_id tự tham chiếu"
-            },
-            {
-                "name": "note_tags",
-                "columns": [
-                    "note_id",
-                    "tag_id",
-                    "created_at"
-                ],
-                "description": "Junction table many-to-many giữa notes và tags"
-            },
-            {
-                "name": "posts",
-                "columns": [
-                    "id",
-                    "user_id",
-                    "community_id",
-                    "content",
-                    "status",
-                    "visibility",
-                    "created_at",
-                    "updated_at"
-                ],
-                "description": "Bài viết trong Community với RLS cho public access",
-                "rls_notes": "Public users có thể đọc posts với status='approved' và visibility='public'"
-            }
-        ],
-        "relationships_explained": "Users have Profiles. Users can Follow each other. Posts can be Liked/Commented. Users earn XP and Badges. Public users can view approved community posts."
+    "deployment": {
+      "server": "VPS (Ubuntu 24.04 LTS)",
+      "ip": "43.228.214.174",
+      "port": "3000",
+      "process_manager": "PM2 (app name: tulanh)",
+      "node_version": "24.13.0",
+      "domain": "https://tulanh.online (Active SSL)"
     },
-    "api_endpoints": [
-        {
-            "path": "/api/auth/login",
-            "method": "POST",
-            "explained": "Đăng nhập qua Supabase Auth"
-        },
-        {
-            "path": "/api/posts",
-            "method": "GET",
-            "explained": "Lấy danh sách bài viết (public access cho approved posts)"
-        }
-    ],
-    "features": [
-        {
-            "name": "Auth",
-            "status": "Implemented",
-            "description": "Supabase Auth + Google OAuth"
-        },
-        {
-            "name": "Gamification",
-            "status": "Implemented",
-            "description": "XP System, Ranks (1-5), Badges, Daily Check-in, Leaderboards"
-        },
-        {
-            "name": "Community",
-            "status": "Implemented",
-            "description": "Public Community Feed - Newsfeed hiển thị ngay khi vào trang chủ, không cần đăng nhập để xem bài viết"
-        },
-        {
-            "name": "Classes",
-            "status": "Implemented",
-            "description": "Private communities với admin approval, RLS policies"
-        },
-        {
-            "name": "Tủ Lạnh (Notes)",
-            "status": "Implemented",
-            "description": "Note-taking với Markdown, URL bookmarking, Hierarchical tags"
-        },
-        {
-            "name": "Productivity Tools",
-            "status": "Implemented",
-            "description": "Todos, Journal, Pomodoro Timer"
-        },
-        {
-            "name": "Branding",
-            "status": "Implemented",
-            "description": "Logo 'The FRIDGE' với icon tủ lạnh, viền cam sáng, favicon custom"
-        },
-        {
-            "name": "Localization",
-            "status": "Vietnamese Only",
-            "description": "Đã loại bỏ hoàn toàn tiếng Anh, chỉ giữ lại Tiếng Việt"
-        }
-    ],
-    "security": {
-        "rls_enabled": true,
-        "auth_provider": "Supabase Auth",
-        "last_audit": "2026-02-05",
-        "audit_result": "9.5/10 - No critical issues",
-        "public_access": "Community posts với status='approved' và visibility='public' có thể xem không cần đăng nhập"
-    },
-    "knowledge_items": {
-        "patterns": [
-            "Supabase RLS for security",
-            "Next.js Server Components for data fetching",
-            "Server Actions for CRUD",
-            "Set explicit loading timeout (e.g., 10s) for Auth/API hooks to prevent freezing",
-            "Public community feed as homepage for better engagement"
-        ],
-        "gotchas": [
-            "Missing .env.local causes Next.js runtime crashes",
-            "Loading spinners must check if data is actually empty to avoid persistent spinners",
-            "useSupabaseAuth hook needs try-catch and timeout for robust initialization",
-            "VPS cache (.next folder) cần xóa khi update assets (logo, favicon)"
-        ],
-        "branding": {
-            "logo_text": "The FRIDGE",
-            "logo_effects": "Orange text stroke (1px #f97316), blue glow around logo container",
-            "logo_icon": "/images/fridge-logo.png (placed after text)",
-            "favicon": "/icon.png (same as logo image)"
-        },
-        "deployment": {
-            "auto_deploy_script": "SSH-based deployment using ssh2 library",
-            "steps": [
-                "git pull origin main",
-                "npm install",
-                "npm run build",
-                "pm2 restart tulanh"
-            ],
-            "cache_clear": "rm -rf .next (when updating static assets)",
-            "infrastructure_code": "configure_vps.ps1 + nginx_base.conf (Automated Nginx & SSL setup)"
-        }
+    "key_packages": {
+      "@supabase/supabase-js": "2.94.1",
+      "react": "19.2.3",
+      "next": "16.1.6",
+      "tailwindcss": "3.4.19"
     }
+  },
+  "database_schema": {
+    "summary": "Social learning platform với 21 tables. Users -> Posts, Comments, Communities, Notes, Todos, Badges. RLS policies cho public community access.",
+    "tables": [
+      "profiles",
+      "posts",
+      "comments",
+      "likes",
+      "follows",
+      "communities",
+      "community_members",
+      "notifications",
+      "conversations",
+      "direct_messages",
+      "badges",
+      "user_badges",
+      "todos",
+      "notes",
+      "tags",
+      "note_tags",
+      "journal_entries",
+      "daily_checkins",
+      "shares",
+      "post_approvals",
+      "conversation_participants"
+    ],
+    "tulanh_tables": [
+      {
+        "name": "notes",
+        "columns": [
+          "id",
+          "user_id",
+          "title",
+          "content",
+          "is_url",
+          "url",
+          "url_title",
+          "url_description",
+          "url_fetched_at",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "Lưu ghi chú Markdown và URL bookmarks"
+      },
+      {
+        "name": "tags",
+        "columns": [
+          "id",
+          "user_id",
+          "name",
+          "slug",
+          "parent_id",
+          "level",
+          "created_at"
+        ],
+        "description": "Hierarchical tags với parent_id tự tham chiếu"
+      },
+      {
+        "name": "note_tags",
+        "columns": ["note_id", "tag_id", "created_at"],
+        "description": "Junction table many-to-many giữa notes và tags"
+      },
+      {
+        "name": "posts",
+        "columns": [
+          "id",
+          "user_id",
+          "community_id",
+          "content",
+          "status",
+          "visibility",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "Bài viết trong Community với RLS cho public access",
+        "rls_notes": "Public users có thể đọc posts với status='approved' và visibility='public'"
+      }
+    ],
+    "relationships_explained": "Users have Profiles. Users can Follow each other. Posts can be Liked/Commented. Users earn XP and Badges. Public users can view approved community posts."
+  },
+  "api_endpoints": [
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "explained": "Đăng nhập qua Supabase Auth"
+    },
+    {
+      "path": "/api/posts",
+      "method": "GET",
+      "explained": "Lấy danh sách bài viết (public access cho approved posts)"
+    }
+  ],
+  "features": [
+    {
+      "name": "Auth",
+      "status": "Implemented",
+      "description": "Supabase Auth + Google OAuth"
+    },
+    {
+      "name": "Gamification",
+      "status": "Implemented",
+      "description": "XP System, Ranks (1-5), Badges, Daily Check-in, Leaderboards"
+    },
+    {
+      "name": "Community",
+      "status": "Implemented",
+      "description": "Public Community Feed - Newsfeed hiển thị ngay khi vào trang chủ, không cần đăng nhập để xem bài viết"
+    },
+    {
+      "name": "Classes",
+      "status": "Implemented",
+      "description": "Private communities với admin approval, RLS policies"
+    },
+    {
+      "name": "Tủ Lạnh (Notes)",
+      "status": "Implemented",
+      "description": "Note-taking với Markdown, URL bookmarking, Hierarchical tags"
+    },
+    {
+      "name": "Productivity Tools",
+      "status": "Implemented",
+      "description": "Todos, Journal, Pomodoro Timer"
+    },
+    {
+      "name": "Branding",
+      "status": "Implemented",
+      "description": "Logo 'The FRIDGE' với icon tủ lạnh, viền cam sáng, favicon custom"
+    },
+    {
+      "name": "Localization",
+      "status": "Vietnamese Only",
+      "description": "Đã loại bỏ hoàn toàn tiếng Anh, chỉ giữ lại Tiếng Việt"
+    }
+  ],
+  "security": {
+    "rls_enabled": true,
+    "auth_provider": "Supabase Auth",
+    "last_audit": "2026-02-05",
+    "audit_result": "9.5/10 - No critical issues",
+    "public_access": "Community posts với status='approved' và visibility='public' có thể xem không cần đăng nhập"
+  },
+  "knowledge_items": {
+    "patterns": [
+      "Supabase RLS for security",
+      "Next.js Server Components for data fetching",
+      "Server Actions for CRUD",
+      "Set explicit loading timeout (e.g., 10s) for Auth/API hooks to prevent freezing",
+      "Public community feed as homepage for better engagement"
+    ],
+    "gotchas": [
+      "Missing .env.local causes Next.js runtime crashes",
+      "Loading spinners must check if data is actually empty to avoid persistent spinners",
+      "useSupabaseAuth hook needs try-catch and timeout for robust initialization",
+      "VPS cache (.next folder) cần xóa khi update assets (logo, favicon)"
+    ],
+    "branding": {
+      "logo_text": "The FRIDGE",
+      "logo_effects": "Orange text stroke (1px #f97316), blue glow around logo container",
+      "logo_icon": "/images/fridge-logo.png (placed after text)",
+      "favicon": "/icon.png (same as logo image)"
+    },
+    "deployment": {
+      "auto_deploy_script": "SSH-based deployment using ssh2 library",
+      "steps": [
+        "git pull origin main",
+        "npm install",
+        "npm run build",
+        "pm2 restart tulanh"
+      ],
+      "cache_clear": "rm -rf .next (when updating static assets)",
+      "infrastructure_code": "configure_vps.ps1 + nginx_base.conf (Automated Nginx & SSL setup)"
+    }
+  }
 }

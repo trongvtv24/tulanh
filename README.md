@@ -39,11 +39,13 @@
 ## ✨ Tính Năng
 
 ### 🔐 Authentication
+
 - Đăng nhập với Google OAuth
 - Email/Password authentication
 - Magic Link (OTP)
 
 ### 📝 Community Feed
+
 - Tạo, sửa, xóa bài viết
 - Upload ảnh (Supabase Storage)
 - Like và Comment real-time
@@ -51,27 +53,32 @@
 - Post approval system (cho admin)
 
 ### 🎮 Gamification
+
 - **XP System**: Kiếm điểm kinh nghiệm
 - **5 Levels**: Newbie → Expert
 - **Badges**: Early Adopter, Writer, Influencer
 - **Leaderboards**: Xếp hạng top users
 
 ### 💬 Messaging
+
 - Direct Messages 1-1
 - Real-time chat với Supabase Realtime
 - Unread message counter
 
 ### 🔔 Notifications
+
 - Like, Comment, Follow notifications
 - Real-time updates
 - Mark as read
 
 ### 🛠️ Productivity Tools
+
 - **Todos**: Task management
 - **Journal**: Daily notes
 - **Pomodoro Timer**: Focus timer
 
 ### 🎨 UI/UX
+
 - **Deep Glass Theme**: Dark mode tối ưu
 - Responsive design (Mobile + Desktop)
 - Internationalization (i18n)
@@ -82,6 +89,7 @@
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **UI Library**: Shadcn/UI (Radix UI)
@@ -90,6 +98,7 @@
 - **Icons**: Lucide React
 
 ### Backend
+
 - **Framework**: Next.js Server Actions
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth
@@ -97,6 +106,7 @@
 - **Real-time**: Supabase Realtime
 
 ### Deployment
+
 - **Server**: VPS (Ubuntu 22.04)
 - **Panel**: aaPanel
 - **Web Server**: Nginx (Reverse Proxy)
@@ -108,6 +118,7 @@
 ## 📦 Cài Đặt
 
 ### Yêu Cầu Hệ Thống
+
 - Node.js >= 20.x
 - npm >= 10.x
 - Git
@@ -198,12 +209,14 @@ npm run lint
 Vào **SQL Editor** trên Supabase Dashboard và chạy các file SQL theo thứ tự:
 
 #### 1. Core Setup
+
 ```sql
 -- File: supabase/COMPLETE_SETUP.sql
 -- Tạo tables: profiles, posts, likes, comments, badges, notifications, chat
 ```
 
 #### 2. Additional Modules
+
 ```sql
 -- File: supabase/xp_system.sql
 -- Hệ thống XP và Levels
@@ -222,6 +235,7 @@ Vào **SQL Editor** trên Supabase Dashboard và chạy các file SQL theo thứ
 ```
 
 #### 3. Migrations
+
 ```sql
 -- File: supabase/migrations/20260127_add_topic_to_posts.sql
 -- Thêm topic filter (Youtube/MMO/Share)
@@ -232,12 +246,13 @@ Vào **SQL Editor** trên Supabase Dashboard và chạy các file SQL theo thứ
 Kiểm tra các tables đã được tạo:
 
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
+SELECT table_name
+FROM information_schema.tables
 WHERE table_schema = 'public';
 ```
 
 Kết quả mong đợi:
+
 - `profiles`
 - `posts`
 - `likes`
@@ -260,16 +275,18 @@ Xem hướng dẫn chi tiết tại: [`docs/DEPLOYMENT_GUIDE.md`](docs/DEPLOYMEN
 **Tóm tắt:**
 
 1. **Setup VPS**
+
    ```bash
    # Install Node.js 20.x
    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
    sudo apt-get install -y nodejs
-   
+
    # Install PM2
    sudo npm install -g pm2
    ```
 
 2. **Clone & Build**
+
    ```bash
    git clone <repo-url>
    cd builder-ecosystem
@@ -278,6 +295,7 @@ Xem hướng dẫn chi tiết tại: [`docs/DEPLOYMENT_GUIDE.md`](docs/DEPLOYMEN
    ```
 
 3. **Start with PM2**
+
    ```bash
    pm2 start npm --name "builder-ecosystem" -- start
    pm2 save
@@ -285,11 +303,12 @@ Xem hướng dẫn chi tiết tại: [`docs/DEPLOYMENT_GUIDE.md`](docs/DEPLOYMEN
    ```
 
 4. **Setup Nginx**
+
    ```nginx
    server {
        listen 80;
        server_name yourdomain.com;
-       
+
        location / {
            proxy_pass http://localhost:3000;
            proxy_http_version 1.1;

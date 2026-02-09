@@ -28,6 +28,7 @@ Builder Ecosystem (tulanh.online)
 ```
 
 ### ✅ Benefits of Integration:
+
 - 🚀 **Faster**: 80% infrastructure sẵn có (Next.js, Supabase, Auth, UI)
 - 💰 **Cost-effective**: 1 Supabase project, 1 deployment
 - 👥 **Better UX**: User đã auth, không phải login lại
@@ -38,10 +39,12 @@ Builder Ecosystem (tulanh.online)
 ## 1. VẤN ĐỀ CẦN GIẢI QUYẾT
 
 User cần một nơi lưu trữ:
+
 - 📝 **Ghi chú** (ideas, notes, snippets)
 - 🔗 **URL bookmarks** (articles, resources)
 
 **Khó khăn hiện tại:**
+
 - ❌ Không có cách tổ chức rõ ràng
 - ❌ Không tìm kiếm được nhanh
 - ❌ Phải dùng app thứ 3 (Notion, Obsidian) - phức tạp và tách biệt
@@ -53,6 +56,7 @@ User cần một nơi lưu trữ:
 **Tủ Lạnh** = Nơi lưu trữ ghi chú/URL **đơn giản, nhanh, ngay trong Builder Ecosystem**
 
 ### Core Features:
+
 - ✍️ **Markdown Editor**: Viết ghi chú với Markdown + live preview
 - 🏷️ **Hashtag Hierarchical**: Phân loại theo cấu trúc (#work/project-a/task-1)
 - 🔗 **URL Auto-fetch**: Paste link → tự động lấy title + description
@@ -74,10 +78,12 @@ User cần một nơi lưu trữ:
 ## 4. MVP FEATURES (Phase 1)
 
 ### 🔐 Authentication:
-- [X] Kế thừa Supabase Auth hiện tại
-- [X] Auto-detect logged-in user
+
+- [x] Kế thừa Supabase Auth hiện tại
+- [x] Auto-detect logged-in user
 
 ### 📝 Notes - Core:
+
 - [ ] Tạo ghi chú mới (title + Markdown content)
 - [ ] Sửa ghi chú
 - [ ] Xóa ghi chú (confirm dialog)
@@ -86,12 +92,14 @@ User cần một nơi lưu trữ:
 - [ ] Display created_at/updated_at
 
 ### 🔗 URL Handling:
+
 - [ ] Detect URL in content
 - [ ] Paste URL → auto-fetch metadata (title + description)
 - [ ] Display as card preview
 - [ ] Save as is_url=true note
 
 ### 🏷️ Hashtag System:
+
 - [ ] Parse hashtags from content (#tag1 #parent/child)
 - [ ] Tag autocomplete (type # → suggest existing tags)
 - [ ] Sidebar tag tree view
@@ -99,11 +107,13 @@ User cần một nơi lưu trữ:
 - [ ] Count notes per tag
 
 ### 🔍 Search:
+
 - [ ] Full-text search (title + content)
 - [ ] Search by hashtag
 - [ ] Highlight search results
 
 ### 🎨 UI:
+
 - [ ] Sidebar: Tag Tree + Search
 - [ ] Main Area: Note List + Editor
 - [ ] Dark mode (kế thừa Deep Glass)
@@ -114,6 +124,7 @@ User cần một nơi lưu trữ:
 ## 5. TECH ARCHITECTURE
 
 ### Frontend:
+
 - **Framework:** Next.js 16 App Router ✅ (Existing)
 - **Routing:** `/notes` (new route)
 - **Components:** Shadcn/UI ✅ (Existing)
@@ -123,21 +134,25 @@ User cần một nơi lưu trữ:
   - Parser: `remark-gfm` ✅ (Existing)
 
 ### Backend:
+
 - **Database:** Supabase PostgreSQL ✅ (Existing)
 - **Auth:** Supabase Auth ✅ (Existing)
 - **RLS:** Row Level Security (user chỉ thấy notes của mình)
 
 ### New Dependencies:
+
 ```json
 {
-  "react-markdown": "^9.0.0",     // Existing
-  "remark-gfm": "^4.0.0"           // Existing
+  "react-markdown": "^9.0.0", // Existing
+  "remark-gfm": "^4.0.0" // Existing
   // Không cần thêm package mới!
 }
 ```
 
 ### URL Metadata Fetching:
+
 **Option:** Supabase Edge Function (serverless)
+
 ```typescript
 // supabase/functions/fetch-url-metadata/index.ts
 // Input: URL
@@ -189,7 +204,7 @@ CREATE INDEX idx_tags_user_id ON tags(user_id);
 CREATE INDEX idx_tags_parent_id ON tags(parent_id);
 
 -- Full-text Search
-CREATE INDEX idx_notes_search 
+CREATE INDEX idx_notes_search
 ON notes USING GIN(to_tsvector('english', title || ' ' || COALESCE(content, '')));
 
 -- RLS Policies
@@ -216,6 +231,7 @@ CREATE POLICY "Users can CRUD own note_tags" ON note_tags
 ## 7. UI/UX INTEGRATION
 
 ### Sidebar Menu Addition:
+
 ```
 Current Sidebar:
 ├── Cộng đồng
@@ -226,6 +242,7 @@ Current Sidebar:
 ```
 
 ### Route Structure:
+
 ```
 /notes              → List all notes
 /notes/new          → Create new note
@@ -234,6 +251,7 @@ Current Sidebar:
 ```
 
 ### Layout:
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Builder Ecosystem Header (Existing)               │
@@ -265,6 +283,7 @@ Current Sidebar:
 ### ⏱️ Estimated Time: **10-15 days** (faster vì tận dụng sẵn có)
 
 **Breakdown:**
+
 1. **Database Setup** (1 day): Create tables, RLS policies
 2. **Supabase Edge Function** (1 day): URL metadata fetcher
 3. **UI Components** (3-4 days): Note list, editor, tag tree
@@ -301,13 +320,15 @@ Current Sidebar:
 ## 11. NEXT STEPS
 
 ### ✅ Brainstorm Complete
-- [X] Xác định integration strategy
-- [X] Thiết kế database schema sơ bộ
-- [X] Ước tính timeline
+
+- [x] Xác định integration strategy
+- [x] Thiết kế database schema sơ bộ
+- [x] Ước tính timeline
 
 ### 🎯 Ready for `/plan`:
 
 Chạy `/plan` để tạo:
+
 - ✅ Database migration SQL chi tiết
 - ✅ API endpoints design (Server Actions)
 - ✅ UI component breakdown

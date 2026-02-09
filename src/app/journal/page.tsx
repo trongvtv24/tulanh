@@ -5,13 +5,13 @@ import { LandingPage } from "@/components/landing/LandingPage";
 import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 
 export default function JournalPage() {
-    const { user, loading } = useSupabaseAuth();
+  const { user, loading } = useSupabaseAuth();
 
-    if (loading) return null;
+  if (loading) return null;
 
-    if (!user) {
-        return <LandingPage />;
-    }
+  if (!user) {
+    return <LandingPage />;
+  }
 
-    return <PersonalJournal />;
+  return <PersonalJournal />;
 }

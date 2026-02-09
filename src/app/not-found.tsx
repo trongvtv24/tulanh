@@ -10,7 +10,9 @@ export default function NotFound() {
       <div className="rounded-full bg-muted p-4">
         <FileQuestion className="h-12 w-12 text-muted-foreground" />
       </div>
-      <h1 className="text-4xl font-bold tracking-tight">404 - Không tìm thấy trang</h1>
+      <h1 className="text-4xl font-bold tracking-tight">
+        404 - Không tìm thấy trang
+      </h1>
       <p className="max-w-[400px] text-muted-foreground">
         Trang bạn đang tìm kiếm có thể đã bị xóa, chuyển đi hoặc không tồn tại.
       </p>

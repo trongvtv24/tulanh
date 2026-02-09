@@ -12,9 +12,11 @@
 **Tủ Lạnh** là một module ghi chú tối giản được tích hợp vào Builder Ecosystem, cho phép users lưu trữ và tìm kiếm ghi chú Markdown và URL bookmarks với hệ thống hashtag phân cấp.
 
 ### Core Value Proposition:
+
 > "Lưu & tìm ghi chú/URL đơn giản với Markdown + hashtag phân cấp - ngay trong Builder Ecosystem"
 
 ### Integration Strategy:
+
 - ✅ **Kế thừa 80% infrastructure** (Next.js, Supabase, Auth, UI components)
 - ✅ **Thêm 3 tables mới**: notes, tags, note_tags
 - ✅ **Route: `/notes`**
@@ -25,11 +27,13 @@
 ## 2. USER STORIES
 
 ### US-01: Create Note
+
 **As a** logged-in user  
 **I want to** create a new Markdown note  
 **So that** I can save my ideas quickly
 
 **Acceptance Criteria:**
+
 - [ ] Click "New Note" button
 - [ ] Enter title and Markdown content
 - [ ] Auto-save after 2s of inactivity
@@ -37,11 +41,13 @@
 - [ ] Note appears in list immediately
 
 ### US-02: Create URL Bookmark
+
 **As a** logged-in user  
 **I want to** paste a URL and have metadata auto-fetched  
 **So that** I can bookmark articles without manual entry
 
 **Acceptance Criteria:**
+
 - [ ] Paste URL in content
 - [ ] System detects URL automatically
 - [ ] Fetch title + description (< 5s)
@@ -49,33 +55,39 @@
 - [ ] Save as `is_url=true` note
 
 ### US-03: Add Hashtags
+
 **As a** user  
 **I want to** add hierarchical hashtags to notes  
 **So that** I can organize them by categories
 
 **Acceptance Criteria:**
+
 - [ ] Type `#` to trigger autocomplete
 - [ ] Support hierarchy: `#work/project-a/task-1`
 - [ ] Multiple tags per note
 - [ ] Display in tag tree sidebar
 
 ### US-04: Search Notes
+
 **As a** user  
 **I want to** search notes by title, content, or hashtag  
 **So that** I can find information quickly
 
 **Acceptance Criteria:**
+
 - [ ] Full-text search (< 1s response)
 - [ ] Highlight search terms
 - [ ] Filter by tag (click tag in sidebar)
 - [ ] Sort results by relevance
 
 ### US-05: Edit & Delete Notes
+
 **As a** user  
 **I want to** edit or delete my notes  
 **So that** I can keep information up-to-date
 
 **Acceptance Criteria:**
+
 - [ ] Click note to open editor
 - [ ] Changes auto-save
 - [ ] Delete with confirmation dialog
@@ -203,7 +215,7 @@ export async function createNote(data: {
 // Update note
 export async function updateNote(
   id: string,
-  data: Partial<Note>
+  data: Partial<Note>,
 ): Promise<Note>;
 
 // Delete note
@@ -248,6 +260,7 @@ export async function createTag(data: {
 **URL:** `https://PROJECT_REF.supabase.co/functions/v1/fetch-url-metadata`
 
 **Request:**
+
 ```json
 POST /functions/v1/fetch-url-metadata
 Authorization: Bearer <anon_key>
@@ -258,6 +271,7 @@ Authorization: Bearer <anon_key>
 ```
 
 **Response:**
+
 ```json
 {
   "title": "React",
@@ -266,6 +280,7 @@ Authorization: Bearer <anon_key>
 ```
 
 **Error Response:**
+
 ```json
 {
   "error": "Failed to fetch URL"
@@ -301,6 +316,7 @@ App (Builder Ecosystem)
 ### Component Specs
 
 #### `NoteList.tsx`
+
 ```typescript
 interface NoteListProps {
   notes: Note[];
@@ -310,6 +326,7 @@ interface NoteListProps {
 ```
 
 #### `NoteEditor.tsx`
+
 ```typescript
 interface NoteEditorProps {
   noteId?: string; // undefined for new note
@@ -319,6 +336,7 @@ interface NoteEditorProps {
 ```
 
 #### `TagTree.tsx`
+
 ```typescript
 interface TagTreeProps {
   tags: TagNode[];
@@ -340,28 +358,34 @@ interface TagNode {
 ## 7. HIDDEN REQUIREMENTS
 
 ### 7.1 Auto-save Mechanism
+
 - **Debounce:** 2 seconds after last keystroke
 - **Conflict Resolution:** Last write wins (no CRDT for MVP)
 - **Offline:** Not supported in MVP (Phase 2)
 
 ### 7.2 URL Metadata Caching
+
 -Fetch once per URL
+
 - Cache in `url_fetched_at` timestamp
 - Re-fetch if > 30 days old (Phase 2)
 
 ### 7.3 Tag Hierarchy Rules
+
 - **Max depth:** 5 levels
 - **Naming:** alphanumeric + dash, no spaces
 - **Delimiter:** `/` (slash)
 - **Example:** `work/project-a/backend/api/auth`
 
 ### 7.4 Search Behavior
+
 - **Minimum query length:** 2 characters
 - **Max results:** 100 per page
 - **Ranking:** PostgreSQL full-text search ranking
 - **Fuzzy search:** Not in MVP (Phase 2)
 
 ### 7.5 Performance Requirements
+
 - **Note list load:** < 500ms (100 notes)
 - **Search:** < 1s (1000 notes)
 - **Auto-save:** < 200ms
@@ -372,6 +396,7 @@ interface TagNode {
 ## 8. TECH STACK DETAIL
 
 ### Frontend Stack:
+
 ```json
 {
   "framework": "Next.js 16.1.3",
@@ -384,6 +409,7 @@ interface TagNode {
 ```
 
 ### Backend Stack:
+
 ```json
 {
   "database": "Supabase PostgreSQL 15",
@@ -400,46 +426,54 @@ interface TagNode {
 ## 9. BUILD CHECKLIST
 
 ### Phase 01: Database ✅
+
 - [ ] Create migration SQL
 - [ ] Run on Supabase
 - [ ] Verify tables
 - [ ] Test RLS policies
 
 ### Phase 02: Edge Function
+
 - [ ] Create function
- - [ ] Deploy to Supabase
+- [ ] Deploy to Supabase
 - [ ] Test URL fetching
 - [ ] Handle errors
 
 ### Phase 03: Backend
+
 - [ ] Create Server Actions
 - [ ] Define TypeScript types
 - [ ] Test CRUD operations
 
 ### Phase 04: Core UI
+
 - [ ] Create routes
 - [ ] Build NoteList
 - [ ] Build NoteEditor
 - [ ] Implement auto-save
 
 ### Phase 05: Hashtags
+
 - [ ] Parse hashtags
 - [ ] Build TagTree
 - [ ] Tag autocomplete
 - [ ] Filter by tag
 
 ### Phase 06: Search
+
 - [ ] Search component
 - [ ] Full-text SQL
 - [ ] Highlight results
 
 ### Phase 07: Integration
+
 - [ ] Add to Sidebar
 - [ ] Setup routing
 - [ ] Mobile responsive
 - [ ] E2E testing
 
 ### Final Polish:
+
 - [ ] Dark mode verify
 - [ ] Accessibility check
 - [ ] Performance audit
@@ -450,6 +484,7 @@ interface TagNode {
 ## 10. DEPLOYMENT NOTES
 
 ### Dev Environment:
+
 ```bash
 npm run dev
 # App at http://localhost:3000
@@ -457,6 +492,7 @@ npm run dev
 ```
 
 ### Production Deployment:
+
 - Same VPS as Builder Ecosystem
 - No separate deployment needed
 - PM2 restart after deploy
@@ -466,6 +502,7 @@ npm run dev
 ## 📊 METRICS & SUCCESS CRITERIA
 
 ### MVP Success:
+
 - [ ] User có thể tạo 10+ notes/day
 - [ ] Search < 1s
 - [ ] Auto-save 100% reliable
@@ -474,6 +511,7 @@ npm run dev
 - [ ] Mobile responsive
 
 ### Post-Launch Metrics:
+
 - Average notes/user
 - Search usage %
 - Tags created/user

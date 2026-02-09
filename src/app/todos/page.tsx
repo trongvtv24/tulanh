@@ -13,233 +13,250 @@ import { TodosSidebar } from "@/components/layout/TodosSidebar";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface Todo {
-    id: string;
-    content: string;
-    completed: boolean;
-    created_at: string;
+  id: string;
+  content: string;
+  completed: boolean;
+  created_at: string;
 }
 
 export default function TodosPage() {
-    const [todos, setTodos] = useState<Todo[]>([]);
-    const [newTodo, setNewTodo] = useState("");
-    const [loading, setLoading] = useState(true);
-    const { user } = useSupabaseAuth();
-    const supabase = createClient();
-    const { t, language } = useLanguage();
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodo, setNewTodo] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { user } = useSupabaseAuth();
+  const supabase = createClient();
+  const { t, language } = useLanguage();
 
-    // Fetch todos
-    useEffect(() => {
-        if (!user) {
-            setLoading(false);
-            return;
-        }
-
-        const fetchTodos = async () => {
-            const { data, error } = await supabase
-                .from('todos')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false });
-
-            if (!error && data) {
-                setTodos(data);
-            }
-            setLoading(false);
-        };
-
-        fetchTodos();
-
-        // Realtime subscription
-        const channel = supabase
-            .channel('todos-changes')
-            .on('postgres_changes', {
-                event: '*',
-                schema: 'public',
-                table: 'todos',
-                filter: `user_id=eq.${user.id}`
-            }, (payload: { eventType: string; new: Todo; old: Todo }) => {
-                if (payload.eventType === 'INSERT') {
-                    setTodos(prev => [payload.new, ...prev]);
-                } else if (payload.eventType === 'UPDATE') {
-                    setTodos(prev => prev.map(t => t.id === payload.new.id ? payload.new : t));
-                } else if (payload.eventType === 'DELETE') {
-                    setTodos(prev => prev.filter(t => t.id !== payload.old.id));
-                }
-            })
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
-    }, [user, supabase]);
-
-    const handleAddTodo = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newTodo.trim() || !user) return;
-
-        const { error } = await supabase
-            .from('todos')
-            .insert({
-                user_id: user.id,
-                content: newTodo.trim(),
-                completed: false
-            });
-
-        if (!error) {
-            setNewTodo("");
-            toast.success("Đã thêm công việc mới!");
-        } else {
-            toast.error("Lỗi: " + error.message);
-        }
-    };
-
-    const handleToggleTodo = async (id: string, currentCompleted: boolean) => {
-        const { error } = await supabase
-            .from('todos')
-            .update({ completed: !currentCompleted })
-            .eq('id', id);
-
-        if (error) {
-            toast.error("Lỗi cập nhật công việc");
-        }
-    };
-
-    const handleDeleteTodo = async (id: string) => {
-        const { error } = await supabase
-            .from('todos')
-            .delete()
-            .eq('id', id);
-
-        if (!error) {
-            toast.success("Đã xóa công việc!");
-        }
-    };
-
-    const completedCount = todos.filter(t => t.completed).length;
-    const pendingCount = todos.filter(t => !t.completed).length;
-
-    // Get today's date
-    const today = new Date().toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
+  // Fetch todos
+  useEffect(() => {
     if (!user) {
-        return (
-            <div className="flex items-center justify-center min-h-[50vh]">
-                <Card className="w-full max-w-md text-center p-8">
-                    <h2 className="text-xl font-bold mb-2">{t.todo.loginRequired}</h2>
-                    <p className="text-muted-foreground">{t.todo.loginDesc}</p>
-                </Card>
-            </div>
-        );
+      setLoading(false);
+      return;
     }
 
+    const fetchTodos = async () => {
+      const { data, error } = await supabase
+        .from("todos")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setTodos(data);
+      }
+      setLoading(false);
+    };
+
+    fetchTodos();
+
+    // Realtime subscription
+    const channel = supabase
+      .channel("todos-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "todos",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload: { eventType: string; new: Todo; old: Todo }) => {
+          if (payload.eventType === "INSERT") {
+            setTodos((prev) => [payload.new, ...prev]);
+          } else if (payload.eventType === "UPDATE") {
+            setTodos((prev) =>
+              prev.map((t) => (t.id === payload.new.id ? payload.new : t)),
+            );
+          } else if (payload.eventType === "DELETE") {
+            setTodos((prev) => prev.filter((t) => t.id !== payload.old.id));
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, supabase]);
+
+  const handleAddTodo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTodo.trim() || !user) return;
+
+    const { error } = await supabase.from("todos").insert({
+      user_id: user.id,
+      content: newTodo.trim(),
+      completed: false,
+    });
+
+    if (!error) {
+      setNewTodo("");
+      toast.success("Đã thêm công việc mới!");
+    } else {
+      toast.error("Lỗi: " + error.message);
+    }
+  };
+
+  const handleToggleTodo = async (id: string, currentCompleted: boolean) => {
+    const { error } = await supabase
+      .from("todos")
+      .update({ completed: !currentCompleted })
+      .eq("id", id);
+
+    if (error) {
+      toast.error("Lỗi cập nhật công việc");
+    }
+  };
+
+  const handleDeleteTodo = async (id: string) => {
+    const { error } = await supabase.from("todos").delete().eq("id", id);
+
+    if (!error) {
+      toast.success("Đã xóa công việc!");
+    }
+  };
+
+  const completedCount = todos.filter((t) => t.completed).length;
+  const pendingCount = todos.filter((t) => !t.completed).length;
+
+  // Get today's date
+  const today = new Date().toLocaleDateString(
+    language === "vi" ? "vi-VN" : "en-US",
+    {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    },
+  );
+
+  if (!user) {
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            {/* Header */}
-            <div className="text-center py-6">
-                <div className="flex items-center justify-center gap-2 text-muted-foreground mb-2">
-                    <CalendarDays className="h-5 w-5" />
-                    <span className="text-sm">{today}</span>
-                </div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                    Todo List
-                </h1>
-                <p className="text-muted-foreground mt-1">{t.todo.manageDaily}</p>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4">
-                <Card className="bg-green-500/10 border-green-500/20">
-                    <CardContent className="p-4 text-center">
-                        <div className="text-3xl font-bold text-green-600">{completedCount}</div>
-                        <div className="text-xs text-green-600/80">{t.todo.stats.completed}</div>
-                    </CardContent>
-                </Card>
-                <Card className="bg-orange-500/10 border-orange-500/20">
-                    <CardContent className="p-4 text-center">
-                        <div className="text-3xl font-bold text-orange-600">{pendingCount}</div>
-                        <div className="text-xs text-orange-600/80">{t.todo.stats.pending}</div>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Add Todo Form */}
-            <Card>
-                <CardContent className="p-4">
-                    <form onSubmit={handleAddTodo} className="flex gap-2">
-                        <Input
-                            placeholder={t.todo.addTask}
-                            value={newTodo}
-                            onChange={(e) => setNewTodo(e.target.value)}
-                            className="flex-1"
-                        />
-                        <Button type="submit" disabled={!newTodo.trim()}>
-                            <Plus className="h-4 w-4 mr-1" />
-                            {t.todo.addButton}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-
-            {/* Todo List */}
-            <Card>
-                <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">{t.nav.todoList}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                    {loading ? (
-                        <div className="text-center py-8 text-muted-foreground">{t.common.loading}</div>
-                    ) : todos.length === 0 ? (
-                        <div className="text-center py-8 text-muted-foreground">
-                            <CheckCircle2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                            <p>{t.todo.noTasks}</p>
-                            <p className="text-sm">{t.todo.firstTask}</p>
-                        </div>
-                    ) : (
-                        todos.map((todo) => (
-                            <div
-                                key={todo.id}
-                                className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${todo.completed
-                                    ? 'bg-green-500/5 border-green-500/20'
-                                    : 'bg-card hover:bg-secondary/50'
-                                    }`}
-                            >
-                                <button
-                                    onClick={() => handleToggleTodo(todo.id, todo.completed)}
-                                    className="shrink-0"
-                                >
-                                    {todo.completed ? (
-                                        <CheckCircle2 className="h-5 w-5 text-green-500" />
-                                    ) : (
-                                        <Circle className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
-                                    )}
-                                </button>
-                                <span className={`flex-1 ${todo.completed ? 'line-through text-muted-foreground' : ''}`}>
-                                    {todo.content}
-                                </span>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 text-muted-foreground hover:text-red-500"
-                                    onClick={() => handleDeleteTodo(todo.id)}
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        ))
-                    )}
-                </CardContent>
-            </Card>
-
-            {/* Mobile/Tablet Sidebar Content (Calendar & Pomodoro) - Hidden on XL screens where real sidebar exists */}
-            <div className="xl:hidden pt-4 border-t">
-                <h2 className="text-lg font-bold mb-4">{t.todo.supportTools}</h2>
-                <TodosSidebar />
-            </div>
-        </div>
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Card className="w-full max-w-md text-center p-8">
+          <h2 className="text-xl font-bold mb-2">{t.todo.loginRequired}</h2>
+          <p className="text-muted-foreground">{t.todo.loginDesc}</p>
+        </Card>
+      </div>
     );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="text-center py-6">
+        <div className="flex items-center justify-center gap-2 text-muted-foreground mb-2">
+          <CalendarDays className="h-5 w-5" />
+          <span className="text-sm">{today}</span>
+        </div>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+          Todo List
+        </h1>
+        <p className="text-muted-foreground mt-1">{t.todo.manageDaily}</p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="bg-green-500/10 border-green-500/20">
+          <CardContent className="p-4 text-center">
+            <div className="text-3xl font-bold text-green-600">
+              {completedCount}
+            </div>
+            <div className="text-xs text-green-600/80">
+              {t.todo.stats.completed}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-orange-500/10 border-orange-500/20">
+          <CardContent className="p-4 text-center">
+            <div className="text-3xl font-bold text-orange-600">
+              {pendingCount}
+            </div>
+            <div className="text-xs text-orange-600/80">
+              {t.todo.stats.pending}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Add Todo Form */}
+      <Card>
+        <CardContent className="p-4">
+          <form onSubmit={handleAddTodo} className="flex gap-2">
+            <Input
+              placeholder={t.todo.addTask}
+              value={newTodo}
+              onChange={(e) => setNewTodo(e.target.value)}
+              className="flex-1"
+            />
+            <Button type="submit" disabled={!newTodo.trim()}>
+              <Plus className="h-4 w-4 mr-1" />
+              {t.todo.addButton}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* Todo List */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">{t.nav.todoList}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {loading ? (
+            <div className="text-center py-8 text-muted-foreground">
+              {t.common.loading}
+            </div>
+          ) : todos.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <CheckCircle2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+              <p>{t.todo.noTasks}</p>
+              <p className="text-sm">{t.todo.firstTask}</p>
+            </div>
+          ) : (
+            todos.map((todo) => (
+              <div
+                key={todo.id}
+                className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
+                  todo.completed
+                    ? "bg-green-500/5 border-green-500/20"
+                    : "bg-card hover:bg-secondary/50"
+                }`}
+              >
+                <button
+                  onClick={() => handleToggleTodo(todo.id, todo.completed)}
+                  className="shrink-0"
+                >
+                  {todo.completed ? (
+                    <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <Circle className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
+                  )}
+                </button>
+                <span
+                  className={`flex-1 ${todo.completed ? "line-through text-muted-foreground" : ""}`}
+                >
+                  {todo.content}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-red-500"
+                  onClick={() => handleDeleteTodo(todo.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Mobile/Tablet Sidebar Content (Calendar & Pomodoro) - Hidden on XL screens where real sidebar exists */}
+      <div className="xl:hidden pt-4 border-t">
+        <h2 className="text-lg font-bold mb-4">{t.todo.supportTools}</h2>
+        <TodosSidebar />
+      </div>
+    </div>
+  );
 }

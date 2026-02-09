@@ -7,6 +7,7 @@ description: Hướng dẫn Deploy Website Next.js lên VPS (Ubuntu) sử dụng
 Tài liệu này hướng dẫn chi tiết cách deploy dự án Next.js kết nối Supabase lên VPS chạy Ubuntu (20.04/22.04).
 
 ## 1. Chuẩn Bị
+
 - **VPS**: Hệ điều hành Ubuntu 22.04 (khuyến nghị).
 - **Domain**: Đã trỏ DNS về IP của VPS (ví dụ: `A @ 1.2.3.4`).
 - **SSH Client**: Putty hoặc Terminal.
@@ -18,11 +19,13 @@ Tài liệu này hướng dẫn chi tiết cách deploy dự án Next.js kết n
 Đăng nhập vào VPS qua SSH và chạy các lệnh sau:
 
 ### Cập nhật hệ thống
+
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
 ### Cài đặt Node.js (Phiên bản 20.x LTS)
+
 ```bash
 # Cài đặt curl nếu chưa có
 sudo apt install curl -y
@@ -39,11 +42,13 @@ node -v
 ```
 
 ### Cài đặt Git, Nginx và Certbot (SSL)
+
 ```bash
 sudo apt install git nginx certbot python3-certbot-nginx -y
 ```
 
 ### Cài đặt PM2 (Process Manager để chạy app nền)
+
 ```bash
 sudo npm install -g pm2
 ```
@@ -53,6 +58,7 @@ sudo npm install -g pm2
 ## 3. Clone Mã Nguồn & Cài Đặt
 
 ### Clone code từ GitHub
+
 ```bash
 # Di chuyển ra thư mục web server
 cd /var/www
@@ -71,6 +77,7 @@ cd /var/www/mysite
 ```
 
 ### Cài đặt Dependencies và Build
+
 ```bash
 # Cài package
 npm install
@@ -99,6 +106,7 @@ pm2 startup
 ```
 
 Kiểm tra app đang chạy ở port 3000:
+
 ```bash
 curl http://localhost:3000
 ```
@@ -110,11 +118,13 @@ curl http://localhost:3000
 Chúng ta cần Nginx để trỏ domain vào port 3000 của Next.js.
 
 ### Tạo file cấu hình
+
 ```bash
 sudo nano /etc/nginx/sites-available/vietnam-social
 ```
 
 ### Dán nội dung sau vào file (thay `yourdomain.com` bằng domain thật):
+
 ```nginx
 server {
     listen 80;
@@ -130,9 +140,11 @@ server {
     }
 }
 ```
+
 Lưu lại (Ctrl+O -> Enter -> Ctrl+X).
 
 ### Kích hoạt cấu hình
+
 ```bash
 # Tạo shortcut sang thư mục sites-enabled
 sudo ln -s /etc/nginx/sites-available/vietnam-social /etc/nginx/sites-enabled/
@@ -153,6 +165,7 @@ Sử dụng Certbot để cài SSL miễn phí từ Let's Encrypt:
 ```bash
 sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 ```
+
 - Nhập email để nhận thông báo.
 - Chọn `Y` để đồng ý điều khoản.
 - Chọn `2` (Redirect) nếu được hỏi để tự động chuyển HTTP sang HTTPS.
@@ -164,6 +177,7 @@ sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 Bây giờ bạn có thể truy cập website tại `https://yourdomain.com`.
 
 ### Các lệnh bảo trì thường dùng:
+
 - **Xem log lỗi:** `pm2 logs vietnam-social`
 - **Cập nhật code mới:**
   ```bash
