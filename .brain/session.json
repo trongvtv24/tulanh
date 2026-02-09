@@ -1,117 +1,64 @@
 {
-    "updated_at": "2026-02-06T05:00:00Z",
+    "updated_at": "2026-02-08T07:15:00Z",
     "working_on": {
-        "feature": "Branding & Localization",
-        "task": "Update logo, favicon, and remove English language",
-        "status": "completed",
+        "feature": "Post-Deployment Config",
+        "task": "Update Auth Redirect URLs",
+        "status": "pending",
         "files": [
-            "src/components/layout/Header.tsx",
-            "src/context/LanguageContext.tsx",
-            "src/app/icon.png",
-            "public/images/fridge-logo.png"
+            "Supabase Dashboard (External)",
+            "Google Cloud Console (External)"
         ],
         "blockers": [],
-        "notes": "Đã hoàn thành việc rebrand thành 'The FRIDGE' và loại bỏ hoàn toàn tiếng Anh"
+        "notes": "Deployment successful. HTTPS active. Need to update 3rd party auth providers."
     },
     "pending_tasks": [
         {
-            "task": "Setup Nginx & SSL for Domain",
+            "task": "Update Supabase Site URL to https://tulanh.online",
             "priority": "high",
-            "notes": "Currently running on port 3000 via HTTP"
+            "notes": "Critical for Auth"
         },
         {
-            "task": "Configure DNS for tulanh.online",
+            "task": "Update Google OAuth Redirect URI",
             "priority": "high",
-            "notes": "Verify A record points to 43.228.214.174"
+            "notes": "Critical for Google Login"
+        },
+        {
+            "task": "Monitor VPS stability",
+            "priority": "medium",
+            "notes": "Ensure Swap memory is sufficient for future builds"
         }
     ],
     "recent_changes": [
         {
-            "timestamp": "2026-02-06T04:00:00Z",
-            "type": "feature",
-            "description": "Make Community page public - Allow unauthenticated users to view approved posts",
+            "timestamp": "2026-02-08T07:10:00Z",
+            "type": "infrastructure",
+            "description": "Automated VPS configuration with configure_vps.ps1",
             "files": [
-                "src/app/page.tsx",
-                "supabase/migrations/20260206_make_community_posts_public.sql"
+                "configure_vps.ps1",
+                "nginx_base.conf"
             ]
         },
         {
-            "timestamp": "2026-02-06T04:15:00Z",
-            "type": "branding",
-            "description": "Update logo to 'The FRIDGE' with fridge icon and orange stroke effect",
-            "files": [
-                "src/components/layout/Header.tsx",
-                "public/images/fridge-logo.png"
-            ]
-        },
-        {
-            "timestamp": "2026-02-06T04:20:00Z",
-            "type": "branding",
-            "description": "Replace favicon with fridge logo",
-            "files": [
-                "src/app/favicon.ico (deleted)",
-                "src/app/icon.png (created)"
-            ]
-        },
-        {
-            "timestamp": "2026-02-06T04:30:00Z",
-            "type": "feature",
-            "description": "Set Community Feed as homepage for all users (logged in or not)",
-            "files": [
-                "src/app/page.tsx"
-            ]
-        },
-        {
-            "timestamp": "2026-02-06T04:55:00Z",
-            "type": "localization",
-            "description": "Remove English language - Vietnamese only",
-            "files": [
-                "src/context/LanguageContext.tsx",
-                "src/components/layout/Header.tsx"
-            ]
+            "timestamp": "2026-02-08T07:08:00Z",
+            "type": "deployment",
+            "description": "Successfully enabled HTTPS via Let's Encrypt",
+            "files": []
         }
     ],
-    "errors_encountered": [
-        {
-            "error": "VPS showing old logo after deployment",
-            "solution": "Clear .next cache folder before rebuild to force regeneration of static assets",
-            "resolved": true
-        },
-        {
-            "error": "Local build failing with 500 error",
-            "solution": "Create .env.local with Supabase credentials for local testing",
-            "resolved": true
-        }
-    ],
+    "errors_encountered": [],
     "decisions_made": [
         {
-            "decision": "Make Community Feed public and set as homepage",
-            "reason": "Better user engagement - visitors can see content immediately without signup"
-        },
-        {
-            "decision": "Use 'The FRIDGE' as brand name with fridge icon",
-            "reason": "More memorable and visual identity, relates to 'Tủ Lạnh' concept"
-        },
-        {
-            "decision": "Remove English language completely",
-            "reason": "Target audience is Vietnamese users only, simplifies codebase"
-        },
-        {
-            "decision": "Use orange stroke for logo text",
-            "reason": "Creates visual contrast and premium feel"
-        },
-        {
-            "decision": "Always clear .next cache when deploying asset changes",
-            "reason": "Prevents serving stale cached versions of logos/icons"
+            "decision": "Bypass aaPanel UI for Nginx Config",
+            "reason": "Direct file manipulation via SSH script provides more reliable results and avoids UI quirks."
         }
     ],
     "deployment_notes": {
-        "last_deploy": "2026-02-06T04:58:00Z",
-        "deploy_method": "Automated SSH deployment via ssh2 library",
+        "last_deploy": "2026-02-08T07:08:00Z",
+        "deploy_method": "Automated SSH Script (configure_vps.ps1)",
         "vps_ip": "43.228.214.174",
+        "domain": "https://tulanh.online",
         "pm2_app_name": "tulanh",
-        "build_time": "~12-15 seconds",
-        "cache_strategy": "Clear .next folder for asset updates, keep for code-only updates"
+        "notes": "SSL Enabled. Auto-renew via Certbot."
     },
     "audit_summary": {
         "date": "2026-02-05",

@@ -1,5 +1,19 @@
 # Changelog
 
+## [2026-02-08] - Production Release
+
+### Added
+- **Infrastructure Code**: `configure_vps.ps1` và `nginx_base.conf` để tự động hóa cấu hình VPS bỏ qua Panel
+- **HTTPS/SSL Config**: Auto SSL (Let's Encrypt) qua script
+
+### Changed
+- **Deployment URL**: Chính thức hoạt động tại `https://tulanh.online`
+- **Nginx Strategy**: Chuyển từ config thủ công sang config-as-code để tránh conflict với aaPanel
+
+### Fixed
+- **Zombie Processes**: Xử lý triệt để process Node.js cũ bị treo bằng lệnh `fuser -k`
+- **Mixed Content**: Fix lỗi HTTP/HTTPS bằng cách Force SSL
+
 ## [2026-02-06] - Branding & Localization Update
 
 ### Added

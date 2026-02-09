@@ -1,46 +1,55 @@
-# 🚀 Hướng dẫn cập nhật VPS (Fix lỗi Loading Treo)
+# 🚀 Hướng dẫn cập nhật VPS (Fix lỗi Loading Treo & Cache)
 
-Code mới đã được push lên GitHub. Anh hãy SSH vào VPS và thực hiện các bước sau:
+## ⚠️ Lưu ý Quan trọng về Nginx (aaPanel)
+Trên VPS này, file cấu hình Nginx thực sự nằm ở:
+`/www/server/panel/vhost/nginx/tulanh.online.conf`
 
-## 1️⃣ Cập nhật Code mới
+**KHÔNG** sửa trong `/etc/nginx/sites-available/` vì sẽ không có tác dụng.
 
-Di chuyển vào thư mục dự án và pull code:
+---
+
+## 1️⃣ Force Kill & Update Code (Chống Zombie Process)
+Để đảm bảo code cũ không bị "treo" (zombie), hãy chạy lệnh force kill trước khi restart:
 
 ```bash
-cd /path/to/your/project/tulanh  # Đường dẫn tới thư mục dự án trên VPS
+cd /www/wwwroot/tulanh.online
 git pull origin main
+
+# Force kill process cũ trên port 3000
+fuser -k -9 3000/tcp || true
+
+# Cài đặt & Build (nếu có thay đổi package)
+npm install --legacy-peer-deps
+npm run build
+
+# Khởi động lại PM2
+pm2 delete all || true
+pm2 start npm --name "tulanh" -- start
+pm2 save
 ```
 
-## 2️⃣ Cập nhật biến môi trường (QUAN TRỌNG)
+## 2️⃣ Cập nhật biến môi trường (Nếu cần)
+File `.env.local` nằm tại `/www/wwwroot/tulanh.online/.env.local`.
 
-Lỗi "treo loading" chủ yếu do thiếu cấu hình Supabase làm app bị crash ngầm. Anh cần đảm bảo file `.env` hoặc `.env.local` trên VPS có đủ 2 dòng này:
+---
+
+## 3️⃣ Kiểm tra Nginx (Nếu mất HTTPS)
+Nếu truy cập bị lỗi SSL/HTTPS, kiểm tra file config:
 
 ```bash
-nano .env.local
+nano /www/server/panel/vhost/nginx/tulanh.online.conf
 ```
 
-Dán nội dung sau vào (đây là key em vừa lấy được từ Supabase của anh):
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://uoqyotwurkyjdrawqbpe.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvcXlvdHd1cmt5amRyYXdxYnBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NjUzOTksImV4cCI6MjA4NDM0MTM5OX0.brBwR5Xb4GclhbieaSS3dC9G6D3MnWWQQtCU9WWtYPk
-```
-
-Lưu lại (Ctrl+O, Enter) và thoát (Ctrl+X).
-
-## 3️⃣ Rebuild và Khởi động lại
-
-Nếu anh dùng **PM2** (chạy trực tiếp):
+Đảm bảo có đủ block `server { listen 443 ssl ... }`. Sau đó reload:
 
 ```bash
-npm install           # Cài đặt thêm package nếu có (dự phòng)
-npm run build        # Build lại ứng dụng Next.js
-pm2 restart all      # Hoặc tên process cụ thể, ví dụ: pm2 restart tulanh
+nginx -t
+service nginx reload
 ```
 
-Nếu anh dùng **Docker**:
-
+## 4️⃣ Kiểm tra nhanh
+Sử dụng script verify tự tạo:
 ```bash
-docker-compose down
-docker-compose up -d --build
+curl -s http://127.0.0.1:3000 | grep "The FRIDGE"
 ```
+Nếu hiện output có chữ "The FRIDGE" là code mới đã chạy thành công.

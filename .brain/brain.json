@@ -38,7 +38,7 @@
             "port": "3000",
             "process_manager": "PM2 (app name: tulanh)",
             "node_version": "24.13.0",
-            "domain": "tulanh.online (pending DNS)"
+            "domain": "https://tulanh.online (Active SSL)"
         },
         "key_packages": {
             "@supabase/supabase-js": "2.94.1",
@@ -219,7 +219,8 @@
                 "npm run build",
                 "pm2 restart tulanh"
             ],
-            "cache_clear": "rm -rf .next (when updating static assets)"
+            "cache_clear": "rm -rf .next (when updating static assets)",
+            "infrastructure_code": "configure_vps.ps1 + nginx_base.conf (Automated Nginx & SSL setup)"
         }
     }
 }
