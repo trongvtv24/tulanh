@@ -5,12 +5,17 @@ import { SinglePostView } from "@/components/feed/SinglePostView";
 import { Metadata } from "next";
 import { getRankByLevel } from "@/config/ranks";
 
+import { shortToUuid } from "@/lib/uuid";
+
+// ... existing imports
+
 interface PageProps {
     params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { id } = await params;
+    const realId = shortToUuid(id); // Decode possible short ID
     const supabase = await createClient(); // Await createClient() here 
 
     const { data: post } = await supabase
@@ -21,18 +26,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title,
             profiles (full_name)
         `)
-        .eq("id", id)
+        .eq("id", realId)
         .single();
 
+    // ... rest of metadata logic (checked below)
     if (!post) {
         return {
             title: "Post not found",
         };
     }
-
-    const title = post.title || `${post.profiles?.full_name || "User"}'s Post`;
-    const description = post.content.slice(0, 160);
-    const images = post.image_url ? [post.image_url] : [];
+    // ...
+    const postData = post as any;
+    const title = postData.title || `${postData.profiles?.full_name || "User"}'s Post`;
+    const description = postData.content.slice(0, 160);
+    const images = postData.image_url ? [postData.image_url] : [];
 
     return {
         title: title,
@@ -54,6 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PostPage({ params }: PageProps) {
     const { id } = await params;
+    const realId = shortToUuid(id); // Decode possible short ID
     const supabase = await createClient();
 
     // 1. Fetch Post Data
@@ -74,7 +82,7 @@ export default async function PostPage({ params }: PageProps) {
                 icon
             )
         `)
-        .eq("id", id)
+        .eq("id", realId)
         .single();
 
     if (error || !post) {

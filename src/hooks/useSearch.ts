@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { uuidToShort } from "@/lib/uuid";
 
 export interface SearchResult {
     type: 'profile' | 'post';
@@ -45,11 +46,11 @@ export function useSearch() {
                 .ilike('full_name', `%${query}%`)
                 .limit(5);
 
-            // 2. Search Posts (Simple content match)
+            // 2. Search Posts (Search in both title and content)
             const { data: posts } = await supabase
                 .from('posts')
-                .select('id, content, created_at, profiles(full_name)')
-                .ilike('content', `%${query}%`)
+                .select('id, title, content, created_at, profiles(full_name)')
+                .or(`title.ilike.%${query}%,content.ilike.%${query}%`)
                 .limit(5);
 
             const userResults: SearchResult[] = (users || []).map((u: Record<string, unknown>) => ({
@@ -63,12 +64,21 @@ export function useSearch() {
 
             const postResults: SearchResult[] = (posts || []).map((p: Record<string, unknown>) => {
                 const profiles = p.profiles as Record<string, unknown> | null;
+                const postTitle = p.title as string;
+                const postContent = p.content as string;
+
+                // Use post title needed, fallback to content snippet
+                let displayTitle = postTitle;
+                if (!displayTitle) {
+                    displayTitle = `${profiles?.full_name || 'Anonymous'}: ${postContent.substring(0, 30)}...`;
+                }
+
                 return {
                     type: 'post' as const,
                     id: p.id as string,
-                    title: `${profiles?.full_name || 'Anonymous'}: ${(p.content as string).substring(0, 30)}...`,
+                    title: displayTitle,
                     subtitle: new Date(p.created_at as string).toLocaleDateString(),
-                    url: `/feed?post=${p.id}`
+                    url: `/post/${uuidToShort(p.id as string)}`
                 };
             });
 

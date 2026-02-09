@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { UI_Post } from "@/hooks/usePosts";
 
+import { uuidToShort } from "@/lib/uuid";
+
 interface PostHeaderProps {
     post: UI_Post;
     isAuthor: boolean;
@@ -44,7 +46,7 @@ export function PostHeader({ post, isAuthor, isAdmin, onEdit, onDelete, onBlockU
                         )}
                     </Link>
                     <div className="flex items-center gap-2 flex-wrap">
-                        <Link href={`/post/${post.id}`} className="text-xs text-muted-foreground hover:underline">
+                        <Link href={`/post/${uuidToShort(post.id)}`} className="text-xs text-muted-foreground hover:underline">
                             {post.time}
                         </Link>
                         {post.community && (
